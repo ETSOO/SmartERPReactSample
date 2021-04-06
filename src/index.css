@@ -1,8 +1,15 @@
+@import '~antd/dist/antd.css';
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  background-color: darkolivegreen;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue',
+    'Lucida Grande', 'Roboto', 'Ebrima', 'Nirmala UI', 'Gadugi',
+    'Segoe Xbox Symbol', 'Segoe UI Symbol', 'Meiryo UI', 'Khmer UI', 'Tunga',
+    'Lao UI', 'Raavi', 'Iskoola Pota', 'Latha', 'Leelawadee',
+    'Microsoft YaHei UI', 'Microsoft JhengHei UI', 'Malgun Gothic',
+    'Estrangelo Edessa', 'Microsoft Himalaya', 'Microsoft New Tai Lue',
+    'Microsoft PhagsPa', 'Microsoft Tai Le', 'Microsoft Yi Baiti',
+    'Mongolian Baiti', 'MV Boli', 'Myanmar Text', 'Cambria Math';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
