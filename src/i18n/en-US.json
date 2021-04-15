@@ -1,9 +1,36 @@
 {
+  "about": "About Us",
+  "aboutPage": [
+    "ETSOO SmartERP, is an one-stop enterprise management SaaS cloud platform, real-time data, simple and efficient system to make work better, boss better, support SMEs to develop rapidly!",
+    "ETSOO Qingdao and Shanghai jointly conduct R&D and operations.",
+    "Technical support and business cooperation, please contact info@etsoo.com."
+  ],
+  "back": "Back",
   "cancel": "Cancel",
   "confirm": "Confirm",
   "etsoo": "ETSOO",
+  "forgotPasswordTip": "Forgot your password?",
+  "keepLogged": "Keep me logged in",
+  "languages": "Languages",
   "loading": "Loading...",
+  "login": "Login",
+  "loginId": "Email or mobile",
+  "nextStep": "Next",
+  "noAccountTip": "No account?",
+  "noAccountCreate": "Create one!",
+  "pageNotFound": "Page Not Found",
   "prompt": "Input",
   "ok": "OK",
+  "submit": "Submit",
+  "terms": "Terms",
+  "termsPage": [
+    "The SaaS software function provided by SmartERP Cloud is based on the network and shared by a large number of users. It cannot be downloaded and installed separately to the user's personal computer.",
+    "The software only collects the data entered by the user during the use process, as well as the IP address and device information based on security requirements, and does not use any cookie data.",
+    "All data only supports software operation and internal related business promotion, and is not shared or sold to any third party.",
+    "Users always have complete rights and interests in the data they collect, but do not have rights and interests in all operating equipment, software codes, data storage, intellectual property rights, and operating brands.",
+    "The user can export the data supported by the system at any time during the payment period. After the payment is stopped, the data will be sealed and deleted at any time after 1 year. There is a charge for re-accessing the data before deleting it."
+  ],
+  "yourPassword": "Your password",
+  "userNotFound": "Can't find an account with this username",
   "warning": "Warning"
 }

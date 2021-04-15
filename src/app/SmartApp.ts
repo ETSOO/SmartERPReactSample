@@ -2,11 +2,11 @@ import { IExternalSettingsHost } from '@etsoo/appscript';
 import { ApiDataError, createClient } from '@etsoo/restclient';
 import { ISmartSettings } from './SmartSettings';
 
-import zhCNLabels from '../i18n/zh-CN.json';
-import enUSLabels from '../i18n/en-US.json';
-import { DomUtils } from '@etsoo/shared';
+import zhCNResources from '../i18n/zh-CN.json';
+import enUSResources from '../i18n/en-US.json';
+import { DataTypes, DomUtils } from '@etsoo/shared';
 import {
-  LanguageState,
+  CultureState,
   NotificationRenderProps,
   NotifierMU,
   ReactApp,
@@ -15,14 +15,14 @@ import {
 import { ISmartUser } from './SmartUser';
 import React from 'react';
 
-// Supported language
-const supportedLanguages = [
-  { name: 'zh-CN', label: '简体中文', labels: zhCNLabels },
-  { name: 'en-US', label: 'English', labels: enUSLabels }
+// Supported cultures
+const supportedCultures = [
+  { name: 'zh-CN', label: '简体中文', resources: zhCNResources },
+  { name: 'en-US', label: 'English', resources: enUSResources }
 ];
 
-// Detected language
-const { detectedLanguage } = DomUtils;
+// Detected culture
+const { detectedCulture } = DomUtils;
 
 /**
  * SmartERP App
@@ -54,12 +54,12 @@ export class SmartApp extends ReactApp<ISmartSettings> {
     return SmartApp._userState;
   }
 
-  private static _languageState: LanguageState;
+  private static _cultureState: CultureState;
   /**
-   * Language state
+   * Culture state
    */
-  static get languageState() {
-    return SmartApp._languageState;
+  static get cultureState() {
+    return SmartApp._cultureState;
   }
 
   /**
@@ -71,17 +71,14 @@ export class SmartApp extends ReactApp<ISmartSettings> {
       // Merge external configs first
       ...((window as unknown) as IExternalSettingsHost).settings,
 
-      // Detected language
-      detectedLanguage,
+      // Detected culture
+      detectedCulture,
 
-      // Supported languages
-      languages: supportedLanguages,
+      // Supported cultures
+      cultures: supportedCultures,
 
-      // Current language
-      currentLanguage: DomUtils.getLanguage(
-        supportedLanguages,
-        detectedLanguage
-      )!
+      // Current culture
+      currentCulture: {} as DataTypes.CultureDefinition
     };
 
     // Notifier
@@ -89,7 +86,12 @@ export class SmartApp extends ReactApp<ISmartSettings> {
     const notifier = NotifierMU.instance;
 
     // API
+    // Suggest to replace {hostname} with current hostname
     const api = createClient();
+    api.baseUrl = settings.endpoint.replace(
+      '{hostname}',
+      window.location.hostname
+    );
 
     // Global API error handler
     api.onError = (error: ApiDataError) => {
@@ -103,13 +105,24 @@ export class SmartApp extends ReactApp<ISmartSettings> {
       notifier.alert(error.toString(), () => {
         if (status === 401) {
           // Redirect to login page
-          window.location.href = '/login';
+          window.location.href = SmartApp.instance.transformUrl('/');
         }
       });
     };
 
-    SmartApp._instance = new SmartApp(settings, api, notifier);
+    // App
+    const app = new SmartApp(settings, api, notifier);
+
+    // Static reference
+    SmartApp._instance = app;
+
+    // Detect IP data
+    // app.detectIP();
+
+    // Set default language
+    app.changeCulture(DomUtils.getCulture(supportedCultures, detectedCulture)!);
+
     SmartApp._userState = new UserState<ISmartUser>();
-    SmartApp._languageState = new LanguageState(settings.currentLanguage);
+    SmartApp._cultureState = new CultureState(settings.currentCulture);
   }
 }
