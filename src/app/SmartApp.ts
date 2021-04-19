@@ -7,6 +7,7 @@ import enUSResources from '../i18n/en-US.json';
 import { DataTypes, DomUtils } from '@etsoo/shared';
 import {
   CultureState,
+  MUGlobal,
   NotificationRenderProps,
   NotifierMU,
   ReactApp,
@@ -23,6 +24,9 @@ const supportedCultures = [
 
 // Detected culture
 const { detectedCulture } = DomUtils;
+
+// Global settings
+MUGlobal.textFieldVariant = 'standard';
 
 /**
  * SmartERP App
@@ -117,7 +121,7 @@ export class SmartApp extends ReactApp<ISmartSettings> {
     SmartApp._instance = app;
 
     // Detect IP data
-    // app.detectIP();
+    app.detectIP();
 
     // Set default language
     app.changeCulture(DomUtils.getCulture(supportedCultures, detectedCulture)!);

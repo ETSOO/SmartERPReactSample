@@ -1,18 +1,21 @@
+import 'core-js';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { SmartApp } from './app/SmartApp';
 import { Router } from '@reach/router';
-import About from './login/About';
 import Register from './login/Register';
-import Terms from './login/Terms';
 import { NotFound } from './NotFound';
 import Password from './login/Password';
-import { CssBaseline } from '@material-ui/core';
+import { CircularProgress, CssBaseline } from '@material-ui/core';
 
 // Root
 const root = document.getElementById('root')!;
+
+// Lazy load components
+const About = React.lazy(() => import('./login/About'));
+const Terms = React.lazy(() => import('./login/Terms'));
 
 // App
 SmartApp.setup();
@@ -35,16 +38,18 @@ ReactDOM.render(
         {(value) => <NotifierProvider labels={value.state.resources} />}
       </CultureStateContext.Consumer>
       <UserStateProvider>
-        <Router basepath={SmartApp.instance.settings.homepage}>
-          <App path="/" />
+        <React.Suspense fallback={<CircularProgress />}>
+          <Router basepath={SmartApp.instance.settings.homepage}>
+            <App path="/" />
 
-          <About path="/login/about" />
-          <Register path="/login/register" />
-          <Password path="/login/password/:username" />
-          <Terms path="/login/terms" />
+            <About path="/login/about" />
+            <Register path="/login/register" />
+            <Password path="/login/password/:username" />
+            <Terms path="/login/terms" />
 
-          <NotFound default />
-        </Router>
+            <NotFound default />
+          </Router>
+        </React.Suspense>
       </UserStateProvider>
     </CultureStateProvider>
   </React.Fragment>,

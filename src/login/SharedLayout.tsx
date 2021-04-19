@@ -3,6 +3,7 @@ import { Box, Typography } from '@material-ui/core';
 import { RouteComponentProps } from '@reach/router';
 import { HBox, VBox } from '@etsoo/react';
 import logo from './../images/etsoo.png';
+import { SmartApp } from '../app/SmartApp';
 
 /**
  * Shared layout props
@@ -12,6 +13,11 @@ export type SharedLayoutProps = RouteComponentProps & {
    * Header right part component
    */
   headerRight?: React.ReactNode;
+
+  /**
+   * Page right part component
+   */
+  pageRight?: React.ReactNode;
 
   /**
    * Naviagating buttons
@@ -40,7 +46,11 @@ export type SharedLayoutProps = RouteComponentProps & {
  * @returns Component
  */
 export function SharedLayout(props: SharedLayoutProps) {
-  const { headerRight, buttons, children, bottom, title } = props;
+  // Destructure
+  const { headerRight, pageRight, buttons, children, bottom, title } = props;
+
+  // Culture context
+  const Context = SmartApp.cultureState.context;
 
   return (
     <Box
@@ -53,7 +63,7 @@ export function SharedLayout(props: SharedLayoutProps) {
       }}
     >
       <HBox
-        padding="16px 24px 2px 24px"
+        padding="16px 24px 16px 24px"
         justifyContent="space-between"
         alignItems="flex-end"
       >
@@ -63,11 +73,15 @@ export function SharedLayout(props: SharedLayoutProps) {
           alt="ETSOO"
           sx={{
             height: { xs: '36px', sm: '48px' },
-            marginBottom: 1.5,
             userSelect: 'none'
           }}
         />
         {headerRight}
+        <Typography variant="subtitle1">
+          <Context.Consumer>
+            {(value) => value.get('smartERP')}
+          </Context.Consumer>
+        </Typography>
       </HBox>
       <VBox
         borderRadius={0.5}
@@ -77,7 +91,10 @@ export function SharedLayout(props: SharedLayoutProps) {
         alignItems="flex-start"
         backgroundColor="#f3f3f3"
       >
-        <Typography variant="h5">{title}</Typography>
+        <HBox justifyContent="space-between" alignItems="center">
+          <Typography variant="h5">{title}</Typography>
+          {pageRight}
+        </HBox>
         {children}
         <HBox justifyContent="flex-end" itemPadding={2}>
           {buttons}

@@ -1,10 +1,16 @@
 import React from 'react';
-import { LanguageChooser } from '@etsoo/react';
+import {
+  HBox,
+  LanguageChooser,
+  TextFieldEx,
+  TextFieldExMethods
+} from '@etsoo/react';
 import { DataTypes } from '@etsoo/shared';
-import { Button, Link, TextField } from '@material-ui/core';
+import { Box, Button, Link } from '@material-ui/core';
 import { RouteComponentProps } from '@reach/router';
 import { SmartApp } from './app/SmartApp';
 import { SharedLayout } from './login/SharedLayout';
+import { AccountCircle } from '@material-ui/icons';
 
 function App(props: RouteComponentProps) {
   // Destruct
@@ -28,9 +34,7 @@ function App(props: RouteComponentProps) {
 
   // Login id field
   const loginRef = React.useRef<HTMLInputElement>();
-
-  // Login id error
-  const [loginIdError, updateLoginIdError] = React.useState<string>();
+  const mRef = React.createRef<TextFieldExMethods>();
 
   // Next button click
   const nextClick = async () => {
@@ -46,10 +50,9 @@ function App(props: RouteComponentProps) {
 
     if (result != null) {
       if (!result) {
-        updateLoginIdError(app.get<string>('userNotFound'));
+        mRef.current?.setError(app.get<string>('userNotFound'));
         loginRef.current?.focus();
       } else {
-        updateLoginIdError(undefined);
         navigate!('login/password/' + encodeURIComponent(id));
       }
     }
@@ -59,7 +62,7 @@ function App(props: RouteComponentProps) {
     <Context.Consumer>
       {(value) => (
         <SharedLayout
-          headerRight={
+          pageRight={
             <LanguageChooser
               items={app.settings.cultures}
               title={value.get('languages')}
@@ -84,24 +87,24 @@ function App(props: RouteComponentProps) {
           ]}
           {...props}
         >
-          <TextField
-            label={value.get('loginId')}
-            variant="standard"
-            fullWidth
-            inputRef={loginRef}
-            onChange={() => updateLoginIdError(undefined)}
-            error={loginIdError != null}
-            helperText={loginIdError}
-            autoCorrect="off"
-            autoCapitalize="none"
-            inputProps={{ inputMode: 'email' }}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter') {
+          <HBox itemPadding={1} alignItems="flex-start">
+            <Box sx={{ paddingTop: 3 }}>
+              <AccountCircle color="primary" />
+            </Box>
+            <TextFieldEx
+              label={value.get('loginId')}
+              ref={mRef}
+              inputRef={loginRef}
+              autoCorrect="off"
+              autoCapitalize="none"
+              inputProps={{ inputMode: 'email' }}
+              showClear={true}
+              onEnter={(e) => {
                 nextClick();
                 e.preventDefault();
-              }
-            }}
-          />
+              }}
+            />
+          </HBox>
           <div>
             {value.get('noAccountTip')}&nbsp;
             <Link href="login/register">{value.get('noAccountCreate')}</Link>
