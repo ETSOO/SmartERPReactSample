@@ -12,11 +12,7 @@ function Terms(props: RouteComponentProps) {
     <SharedLayout
       title={app.get('terms')!}
       buttons={
-        <Button
-          variant="contained"
-          component={Link}
-          to={SmartApp.instance.transformUrl('/')}
-        >
+        <Button variant="contained" component={Link} to={app.transformUrl('/')}>
           {app.get('back')}
         </Button>
       }

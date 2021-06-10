@@ -22,7 +22,7 @@ export type SharedLayoutProps = RouteComponentProps & {
   /**
    * Naviagating buttons
    */
-  buttons?: React.ReactNode;
+  buttons?: React.ReactElement | React.ReactElement[];
 
   /**
    * Main part children
@@ -38,6 +38,16 @@ export type SharedLayoutProps = RouteComponentProps & {
    * Title
    */
   title: string;
+
+  /**
+   * Subtitle
+   */
+  subTitle?: React.ReactNode;
+
+  /**
+   * Visibility
+   */
+  visible?: boolean;
 };
 
 /**
@@ -47,7 +57,16 @@ export type SharedLayoutProps = RouteComponentProps & {
  */
 export function SharedLayout(props: SharedLayoutProps) {
   // Destructure
-  const { headerRight, pageRight, buttons, children, bottom, title } = props;
+  const {
+    headerRight,
+    pageRight,
+    buttons,
+    children,
+    bottom,
+    title,
+    subTitle,
+    visible = true
+  } = props;
 
   // Culture context
   const Context = SmartApp.cultureState.context;
@@ -59,7 +78,8 @@ export function SharedLayout(props: SharedLayoutProps) {
         padding: 1,
         width: { xs: '100%', sm: 450 },
         marginLeft: 'auto',
-        marginRight: 'auto'
+        marginRight: 'auto',
+        visibility: visible ? 'visible' : 'hidden'
       }}
     >
       <HBox
@@ -91,12 +111,22 @@ export function SharedLayout(props: SharedLayoutProps) {
         alignItems="flex-start"
         backgroundColor="#f3f3f3"
       >
-        <HBox justifyContent="space-between" alignItems="center">
-          <Typography variant="h5">{title}</Typography>
-          {pageRight}
-        </HBox>
+        <VBox width="100%">
+          <HBox justifyContent="space-between" alignItems="center">
+            <Typography variant="h5">{title}</Typography>
+            {pageRight}
+          </HBox>
+          {subTitle}
+        </VBox>
         {children}
-        <HBox justifyContent="flex-end" itemPadding={2}>
+        <HBox
+          justifyContent={
+            Array.isArray(buttons) && buttons.length > 1
+              ? 'space-between'
+              : 'flex-end'
+          }
+          itemPadding={2}
+        >
           {buttons}
         </HBox>
       </VBox>

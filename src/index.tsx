@@ -5,20 +5,27 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { SmartApp } from './app/SmartApp';
 import { Router } from '@reach/router';
-import Register from './login/Register';
 import { NotFound } from './NotFound';
 import Password from './login/Password';
-import { CircularProgress, CssBaseline } from '@material-ui/core';
+import { CssBaseline } from '@material-ui/core';
+import Home from './main/Home';
 
 // Root
 const root = document.getElementById('root')!;
 
-// Lazy load components
-const About = React.lazy(() => import('./login/About'));
-const Terms = React.lazy(() => import('./login/Terms'));
-
 // App
 SmartApp.setup();
+const app = SmartApp.instance;
+
+// Lazy load components
+const About = React.lazy(() => import('./login/About'));
+const Register = React.lazy(() => import('./login/Register'));
+const RegisterPassword = React.lazy(() => import('./login/RegisterPassword'));
+const RegisterVerify = React.lazy(() => import('./login/RegisterVerify'));
+const RegisterComplete = React.lazy(() => import('./login/RegisterComplete'));
+const CallbackVerify = React.lazy(() => import('./login/CallbackVerify'));
+const CallbackComplete = React.lazy(() => import('./login/CallbackComplete'));
+const Terms = React.lazy(() => import('./login/Terms'));
 
 // Notifier provider
 const NotifierProvider = SmartApp.notifierProvider;
@@ -28,7 +35,7 @@ const CultureStateContext = SmartApp.cultureState.context;
 const CultureStateProvider = SmartApp.cultureState.provider;
 
 // User state
-const UserStateProvider = SmartApp.userState.provider;
+const UserStateProvider = app.userState.provider;
 
 ReactDOM.render(
   <React.Fragment>
@@ -37,15 +44,25 @@ ReactDOM.render(
       <CultureStateContext.Consumer>
         {(value) => <NotifierProvider labels={value.state.resources} />}
       </CultureStateContext.Consumer>
-      <UserStateProvider>
-        <React.Suspense fallback={<CircularProgress />}>
-          <Router basepath={SmartApp.instance.settings.homepage}>
+      <UserStateProvider
+        update={(dispatch) => {
+          app.userStateDispatch = dispatch;
+        }}
+      >
+        <React.Suspense fallback={null}>
+          <Router basepath={app.settings.homepage}>
             <App path="/" />
 
             <About path="/login/about" />
-            <Register path="/login/register" />
+            <Register path="/login/register/*" />
+            <RegisterPassword path="/login/registerpassword/:username" />
+            <RegisterVerify path="/login/registerverify/:username" />
+            <RegisterComplete path="/login/registercomplete/:username" />
+            <CallbackVerify path="/login/callbackverify/:username" />
+            <CallbackComplete path="/login/callbackcomplete/:username" />
             <Password path="/login/password/:username" />
             <Terms path="/login/terms" />
+            <Home path="/home" />
 
             <NotFound default />
           </Router>

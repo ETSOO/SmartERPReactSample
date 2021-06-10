@@ -1,26 +1,60 @@
 import { IExternalSettingsHost } from '@etsoo/appscript';
-import { ApiDataError, createClient } from '@etsoo/restclient';
+import {
+  ApiAuthorizationScheme,
+  ApiDataError,
+  createClient,
+  IApiPayload
+} from '@etsoo/restclient';
 import { ISmartSettings } from './SmartSettings';
 
 import zhCNResources from '../i18n/zh-CN.json';
 import enUSResources from '../i18n/en-US.json';
-import { DataTypes, DomUtils } from '@etsoo/shared';
+import { DataTypes, DomUtils, StorageUtils } from '@etsoo/shared';
 import {
   CultureState,
   MUGlobal,
   NotificationRenderProps,
   NotifierMU,
-  ReactApp,
-  UserState
+  ReactApp
 } from '@etsoo/react';
 import { ISmartUser } from './SmartUser';
 import React from 'react';
+import { RefreshTokenRQ } from '../RQ/RefreshTokenRQ';
+import { LoginResult } from '../models/LoginResult';
+import { Constants } from './Constants';
 
 // Supported cultures
-const supportedCultures = [
+const supportedCultures: DataTypes.CultureDefinition[] = [
   { name: 'zh-CN', label: '简体中文', resources: zhCNResources },
   { name: 'en-US', label: 'English', resources: enUSResources }
 ];
+
+// Supported countries
+const supportedCountries: DataTypes.Country[] = [
+  {
+    id: 'CN',
+    id3: 'CHN',
+    nid: '156',
+    continent: 'AS',
+    exitCode: '00',
+    idd: '86',
+    currency: 'CNY',
+    language: 'zh-CN'
+  },
+  {
+    id: 'NZ',
+    id3: 'NZL',
+    nid: '554',
+    continent: 'OC',
+    exitCode: '00',
+    idd: '64',
+    currency: 'NZD',
+    language: 'en-NZ'
+  }
+];
+
+// Detected country
+const { detectedCountry } = DomUtils;
 
 // Detected culture
 const { detectedCulture } = DomUtils;
@@ -31,7 +65,7 @@ MUGlobal.textFieldVariant = 'standard';
 /**
  * SmartERP App
  */
-export class SmartApp extends ReactApp<ISmartSettings> {
+export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
   private static _instance: SmartApp;
 
   /**
@@ -48,14 +82,6 @@ export class SmartApp extends ReactApp<ISmartSettings> {
    */
   static get notifierProvider() {
     return SmartApp._notifierProvider;
-  }
-
-  private static _userState: UserState<ISmartUser>;
-  /**
-   * User state
-   */
-  static get userState() {
-    return SmartApp._userState;
   }
 
   private static _cultureState: CultureState;
@@ -75,11 +101,23 @@ export class SmartApp extends ReactApp<ISmartSettings> {
       // Merge external configs first
       ...((window as unknown) as IExternalSettingsHost).settings,
 
+      // Authorization scheme
+      authScheme: ApiAuthorizationScheme.Bearer,
+
       // Detected culture
       detectedCulture,
 
+      // Supported countries
+      countries: supportedCountries,
+
       // Supported cultures
       cultures: supportedCultures,
+
+      // Browser's time zone
+      timeZone: DomUtils.getTimeZone(),
+
+      // Current country
+      currentCountry: {} as DataTypes.Country,
 
       // Current culture
       currentCulture: {} as DataTypes.CultureDefinition
@@ -104,14 +142,13 @@ export class SmartApp extends ReactApp<ISmartSettings> {
         ? api.transformResponse(error.response).status
         : undefined;
 
-      // Report the error
-      // When status is equal to 401, redirect to login page
-      notifier.alert(error.toString(), () => {
-        if (status === 401) {
-          // Redirect to login page
-          window.location.href = SmartApp.instance.transformUrl('/');
-        }
-      });
+      if (status === 401) {
+        // When status is equal to 401, unauthorized, try login
+        app.tryLogin();
+      } else {
+        // Report the error
+        notifier.alert(error.toString());
+      }
     };
 
     // App
@@ -120,13 +157,104 @@ export class SmartApp extends ReactApp<ISmartSettings> {
     // Static reference
     SmartApp._instance = app;
 
-    // Detect IP data
-    app.detectIP();
+    // Default country
+    const defaultCountry =
+      supportedCountries.find((c) => c.id === detectedCountry) ??
+      supportedCountries[0];
+    app.changeCountry(defaultCountry);
 
     // Set default language
     app.changeCulture(DomUtils.getCulture(supportedCultures, detectedCulture)!);
 
-    SmartApp._userState = new UserState<ISmartUser>();
+    // Auto start to detect IP data
+    app.detectIP();
+
+    // States
     SmartApp._cultureState = new CultureState(settings.currentCulture);
+  }
+
+  /**
+   * Go to the login page
+   */
+  toLoginPage() {
+    window.location.href = this.transformUrl('/');
+  }
+
+  /**
+   * Try login
+   */
+  tryLogin() {
+    // Token
+    const refreshToken = this.getCacheToken();
+    if (refreshToken == null || refreshToken === '') {
+      this.toLoginPage();
+      return;
+    }
+
+    // Keep
+    const keep = StorageUtils.getLocalData(Constants.FieldLoginKeep, false);
+
+    // Refresh token
+    const fieldName = Constants.TokenHeaderRefresh;
+
+    // Reqest data
+    const data: RefreshTokenRQ = {
+      country: this.settings.currentCountry.id,
+      timezone: this.settings.timeZone ?? this.ipData?.timezone
+    };
+
+    // Payload
+    const payload: IApiPayload<LoginResult, any> = {
+      config: { headers: { [fieldName]: refreshToken } }
+    };
+
+    // Success
+    const doSuccess = (result: LoginResult) => {
+      // Token
+      const newRefreshToken = this.getResponseToken(payload.response);
+      if (newRefreshToken == null || result.data == null) {
+        this.toLoginPage();
+        return;
+      }
+
+      // User data
+      const userData = result.data;
+
+      // User login
+      this.userLogin(userData, newRefreshToken, keep);
+    };
+
+    // Call API
+    this.api
+      .put<LoginResult>('Auth/RefreshToken', data, payload)
+      .then((result) => {
+        if (result == null) return;
+
+        if (result.success) {
+          // Auto success
+          doSuccess(result);
+        } else if (result.type === 'TokenExpired') {
+          // Dialog to receive password
+          this.notifier.prompt(
+            this.get('reloginTip')!,
+            (pwd) => {
+              // Set password for the action
+              data.pwd = pwd;
+
+              // Submit again
+              this.api
+                .put<LoginResult>('Auth/RefreshToken', data, payload)
+                .then((result) => {
+                  if (result != null && result.success) {
+                    // Manual success
+                    doSuccess(result);
+                  }
+                });
+            },
+            this.get('login'),
+            { type: 'password' }
+          );
+        }
+      });
   }
 }

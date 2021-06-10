@@ -6,10 +6,13 @@ import { SharedLayout } from './SharedLayout';
 import { IActionResult, IResultData } from '@etsoo/appscript';
 import { HBox, TextFieldEx, TextFieldExMethods } from '@etsoo/react';
 import { Lock } from '@material-ui/icons';
+import { StorageUtils } from '@etsoo/shared';
+import { Constants } from '../app/Constants';
+import { LoginResult } from '../models/LoginResult';
+import { IApiPayload } from '@etsoo/restclient';
+import { LoginRQ } from '../RQ/LoginRQ';
 
-type PasswordProps = RouteComponentProps<{ username: string }>;
-
-function Password(props: PasswordProps) {
+function Password(props: RouteComponentProps<{ username: string }>) {
   // App
   const app = SmartApp.instance;
 
@@ -21,10 +24,12 @@ function Password(props: PasswordProps) {
   const [buttonDisabled, updateButtonDisabled] = React.useState<boolean>(false);
 
   // Keep or not
-  const [keep, updateKeep] = React.useState<boolean>();
+  const [keep, updateKeep] = React.useState<boolean>(
+    StorageUtils.getLocalData(Constants.FieldLoginKeep, false)
+  );
 
   // Destruct
-  const { username } = props;
+  const { navigate, username } = props;
 
   if (username == null) {
     return <Redirect to={app.transformUrl('/')} />;
@@ -32,6 +37,9 @@ function Password(props: PasswordProps) {
 
   // Decode
   const id = decodeURIComponent(username);
+
+  // Hold on cache
+  StorageUtils.setLocalData(Constants.FieldUserIdSaved, id);
 
   // Format title
   const formatTitle = (result: IActionResult<IResultData>) => {
@@ -76,17 +84,37 @@ function Password(props: PasswordProps) {
     }
 
     // Model
-    const data = {
+    const data: LoginRQ = {
       id,
       pwd: password,
-      country: app.ipData?.countryCode,
-      timezone: app.ipData?.timezone
+      country: app.settings.currentCountry.id,
+      timezone: app.settings.timeZone ?? app.ipData?.timezone
     };
 
-    const result = await app.api.post<IActionResult>('Auth/Login', data);
+    const payload: IApiPayload<LoginResult, any> = {};
+    const result = await app.api.post<LoginResult>('Auth/Login', data, payload);
 
     if (result != null) {
       if (result.success) {
+        // Token
+        const refreshToken = app.getResponseToken(payload.response);
+
+        if (refreshToken == null || result.data == null) {
+          app.notifier.alert(app.get('unknownError')!);
+          return;
+        }
+
+        // User data
+        const userData = result.data;
+
+        // User login
+        app.userLogin(userData, refreshToken, keep);
+
+        // Keep
+        StorageUtils.setLocalData(Constants.FieldLoginKeep, keep);
+
+        // Navigate to service
+        navigate!(app.transformUrl('/home'));
       } else {
         const [disabled, title] = formatTitle(result);
         mRef.current?.setError(title);
@@ -110,16 +138,19 @@ function Password(props: PasswordProps) {
       }
       {...props}
     >
+      <input type="hidden" name="username" value={id} autoComplete="username" />
       <HBox itemPadding={1} alignItems="flex-start">
         <Box sx={{ paddingTop: 3 }}>
           <Lock color="primary" />
         </Box>
         <TextFieldEx
+          name="password"
           label={app.get('yourPassword')}
           showPassword={true}
           inputRef={passwordRef}
           ref={mRef}
           autoFocus
+          autoComplete="new-password"
           onEnter={(e) => {
             submit();
             e.preventDefault();
@@ -127,11 +158,16 @@ function Password(props: PasswordProps) {
         />
       </HBox>
       <FormControlLabel
-        control={<Switch onChange={(e, checked) => updateKeep(checked)} />}
+        control={
+          <Switch
+            checked={keep}
+            onChange={(e) => updateKeep(e.target.checked)}
+          />
+        }
         label={app.get('keepLogged')}
       />
       <div>
-        <Link href={app.transformUrl(`/login/callback/${username}`)}>
+        <Link href={app.transformUrl(`/login/callbackverify/${username}`)}>
           {app.get('forgotPasswordTip')}
         </Link>
       </div>

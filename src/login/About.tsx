@@ -12,11 +12,7 @@ function About(props: RouteComponentProps) {
     <SharedLayout
       title={app.get('about')!}
       buttons={
-        <Button
-          variant="contained"
-          component={Link}
-          to={SmartApp.instance.transformUrl('/')}
-        >
+        <Button variant="contained" component={Link} to={app.transformUrl('/')}>
           {app.get('back')}
         </Button>
       }
