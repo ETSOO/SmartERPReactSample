@@ -254,6 +254,8 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
             this.get('login'),
             { type: 'password' }
           );
+        } else {
+          this.toLoginPage();
         }
       });
   }

@@ -147,25 +147,23 @@ function App(props: RouteComponentProps) {
     app.api
       .put<LoginResult>('Auth/RefreshToken', data, payload)
       .then((result) => {
-        if (result == null) {
+        if (result == null || !result.success) {
           setVisible(true);
           return;
         }
 
-        if (result.success) {
-          // Token
-          const refreshToken = app.getResponseToken(payload.response);
-          if (refreshToken == null || result.data == null) return;
+        // Token
+        const refreshToken = app.getResponseToken(payload.response);
+        if (refreshToken == null || result.data == null) return;
 
-          // User data
-          const userData = result.data;
+        // User data
+        const userData = result.data;
 
-          // User login
-          app.userLogin(userData, refreshToken, keep);
+        // User login
+        app.userLogin(userData, refreshToken, keep);
 
-          // Navigate to service
-          navigate!(app.transformUrl('/home'));
-        }
+        // Navigate to service
+        navigate!(app.transformUrl('/home'));
       });
   }, [countryId, trySaveLogin, refreshToken, navigate, app]);
 

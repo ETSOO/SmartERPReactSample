@@ -1,50 +1,49 @@
-import {
-  AppBar,
-  Box,
-  IconButton,
-  Toolbar,
-  Typography
-} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import { RouteComponentProps } from '@reach/router';
+import { AppBar, Box, Toolbar, Typography } from '@material-ui/core';
+import { RouteComponentProps, Router } from '@reach/router';
 import { SmartApp } from '../app/SmartApp';
-import { DashboardView } from '../models/DashboardView';
-import { ISmartUser } from '../app/SmartUser';
-import { UserDetector } from '../app/UserDetector';
 import { UserMenu } from '../app/UserMenu';
+import { DrawerMenu } from '../app/DrawerMenu';
+import Dashboard from './Dashboard';
+import React from 'react';
+
+// Lazy load components
+const LoginHistory = React.lazy(() => import('./LoginHistory'));
+const MyProfile = React.lazy(() => import('./MyProfile'));
 
 function Home(_props: RouteComponentProps) {
   // App
   const app = SmartApp.instance;
 
-  // Load data
-  const loadData = (state: ISmartUser) => {
-    app.api.get<DashboardView>('System/Dashboard').then((view) => {
-      if (view == null) return;
-
-      console.log(view);
-    });
-  };
+  // Header
+  const Header = React.useMemo(() => {
+    return (
+      <React.Fragment>
+        <AppBar>
+          <Toolbar>
+            <DrawerMenu />
+            <Typography variant="h6" noWrap component="div">
+              {app.get('smartERP')}
+            </Typography>
+            <Box sx={{ flexGrow: 1 }} />
+            <UserMenu />
+          </Toolbar>
+        </AppBar>
+        <Toolbar />
+      </React.Fragment>
+    );
+  }, [app]);
 
   return (
-    <AppBar>
-      <UserDetector success={loadData} />
-      <Toolbar>
-        <IconButton
-          edge="start"
-          color="inherit"
-          aria-label="open drawer"
-          sx={{ mr: 2 }}
-        >
-          <MenuIcon />
-        </IconButton>
-        <Typography variant="h6" noWrap component="div">
-          SmartERP
-        </Typography>
-        <Box sx={{ flexGrow: 1 }} />
-        <UserMenu />
-      </Toolbar>
-    </AppBar>
+    <React.Fragment>
+      {Header}
+      <Box component="main">
+        <Router primary={false}>
+          <Dashboard path="/" default />
+          <LoginHistory path="/loginhistory" />
+          <MyProfile path="/myprofile" />
+        </Router>
+      </Box>
+    </React.Fragment>
   );
 }
 

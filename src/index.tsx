@@ -50,7 +50,7 @@ ReactDOM.render(
         }}
       >
         <React.Suspense fallback={null}>
-          <Router basepath={app.settings.homepage}>
+          <Router basepath={app.settings.homepage} primary={true}>
             <App path="/" />
 
             <About path="/login/about" />
@@ -62,7 +62,8 @@ ReactDOM.render(
             <CallbackComplete path="/login/callbackcomplete/:username" />
             <Password path="/login/password/:username" />
             <Terms path="/login/terms" />
-            <Home path="/home" />
+
+            <Home path="/home/*" />
 
             <NotFound default />
           </Router>

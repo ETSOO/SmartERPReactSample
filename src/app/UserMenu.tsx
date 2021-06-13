@@ -11,6 +11,7 @@ import {
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { SmartApp } from './SmartApp';
+import { Link } from '@reach/router';
 
 export function UserMenu() {
   // App
@@ -37,16 +38,21 @@ export function UserMenu() {
     setAnchorEl(undefined);
 
     // Sign out
-    app.api.put<boolean>('User/Signout').then((result) => {
-      // Error occurs
-      if (result == null) return;
+    app.api
+      .put<boolean>('User/Signout', undefined, {
+        onError: (error) => {
+          console.log(error);
+          // Prevent further processing
+          return false;
+        }
+      })
+      .then((result) => {
+        // Clear
+        app.userLogout();
 
-      // Clear
-      app.userLogout();
-
-      // Go to login page
-      app.toLoginPage();
-    });
+        // Go to login page
+        app.toLoginPage();
+      });
   };
 
   return (
@@ -74,20 +80,21 @@ export function UserMenu() {
           horizontal: 'right'
         }}
         open={isMenuOpen}
+        onClick={handleMenuClose}
         onClose={handleMenuClose}
       >
-        <MenuItem>
+        <MenuItem component={Link} to="/home/myprofile">
           <ListItemIcon>
             <AccountCircleIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>My profile</ListItemText>
+          <ListItemText>{app.get('menuMyProfile')}</ListItemText>
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleSignout}>
           <ListItemIcon>
             <ExitToAppIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Sign out</ListItemText>
+          <ListItemText>{app.get('signout')}</ListItemText>
         </MenuItem>
       </Menu>
     </React.Fragment>

@@ -1,11 +1,10 @@
 import { SmartApp } from './SmartApp';
-import { ISmartUser } from './SmartUser';
 
 /**
  * User detect callback interface
  */
 export interface IUserDetectCallback {
-  (state: ISmartUser): void;
+  (): void;
 }
 
 /**
@@ -21,13 +20,13 @@ export function UserDetector(props: { success?: IUserDetectCallback }) {
 
   return (
     <app.userStateUpdate
-      update={(state) => {
-        if (state.authorized == null) {
+      update={(authorized) => {
+        if (authorized == null) {
           app.tryLogin();
-        } else if (!state.authorized) {
+        } else if (!authorized) {
           app.toLoginPage();
         } else if (success != null) {
-          success(state);
+          success();
         }
       }}
     />
