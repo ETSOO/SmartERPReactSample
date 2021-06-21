@@ -106,10 +106,10 @@ export function SharedLayout(props: SharedLayoutProps) {
       <VBox
         borderRadius={0.5}
         padding={3}
-        itemPadding={2}
+        spacing={2}
         boxShadow={1}
         alignItems="flex-start"
-        backgroundColor="#f3f3f3"
+        sx={{ backgroundColor: '#f3f3f3' }}
       >
         <VBox width="100%">
           <HBox justifyContent="space-between" alignItems="center">
@@ -125,12 +125,12 @@ export function SharedLayout(props: SharedLayoutProps) {
               ? 'space-between'
               : 'flex-end'
           }
-          itemPadding={2}
+          spacing={2}
         >
           {buttons}
         </HBox>
       </VBox>
-      <HBox padding="8px 24px" itemPadding={2} fontSize="smaller">
+      <HBox padding="8px 24px" spacing={2} fontSize="smaller">
         {bottom}
       </HBox>
     </Box>

@@ -139,7 +139,7 @@ function Password(props: RouteComponentProps<{ username: string }>) {
       {...props}
     >
       <input type="hidden" name="username" value={id} autoComplete="username" />
-      <HBox itemPadding={1} alignItems="flex-start">
+      <HBox spacing={1} alignItems="flex-start">
         <Box sx={{ paddingTop: 3 }}>
           <Lock color="primary" />
         </Box>

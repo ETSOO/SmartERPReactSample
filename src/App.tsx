@@ -173,7 +173,7 @@ function App(props: RouteComponentProps) {
         <SharedLayout
           visible={visible}
           pageRight={
-            <HBox width={200} itemPadding={0.5} justifyContent="flex-end">
+            <HBox width={200} spacing={0.5} justifyContent="flex-end">
               {countryId && (
                 <ItemList
                   items={app.settings.countries}
@@ -214,7 +214,7 @@ function App(props: RouteComponentProps) {
           ]}
           {...props}
         >
-          <HBox itemPadding={1} alignItems="flex-start">
+          <HBox spacing={1} alignItems="flex-start">
             <Box sx={{ paddingTop: 3 }}>
               <AccountCircle color="primary" />
             </Box>

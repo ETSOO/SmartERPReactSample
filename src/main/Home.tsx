@@ -17,32 +17,27 @@ function Home(_props: RouteComponentProps) {
   // Header
   const Header = React.useMemo(() => {
     return (
-      <React.Fragment>
-        <AppBar>
-          <Toolbar>
-            <DrawerMenu />
-            <Typography variant="h6" noWrap component="div">
-              {app.get('smartERP')}
-            </Typography>
-            <Box sx={{ flexGrow: 1 }} />
-            <UserMenu />
-          </Toolbar>
-        </AppBar>
-        <Toolbar />
-      </React.Fragment>
+      <AppBar position="sticky">
+        <Toolbar>
+          <DrawerMenu />
+          <Typography variant="h6" noWrap component="div">
+            {app.get('smartERP')}
+          </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+          <UserMenu />
+        </Toolbar>
+      </AppBar>
     );
   }, [app]);
 
   return (
     <React.Fragment>
       {Header}
-      <Box component="main">
-        <Router primary={false}>
-          <Dashboard path="/" default />
-          <LoginHistory path="/loginhistory" />
-          <MyProfile path="/myprofile" />
-        </Router>
-      </Box>
+      <Router primary={false}>
+        <Dashboard path="/" default />
+        <LoginHistory path="/loginhistory" />
+        <MyProfile path="/myprofile" />
+      </Router>
     </React.Fragment>
   );
 }

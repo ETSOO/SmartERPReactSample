@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Avatar,
   Divider,
   IconButton,
   ListItemIcon,
@@ -12,10 +11,14 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { SmartApp } from './SmartApp';
 import { Link } from '@reach/router';
+import { UserAvatar } from '@etsoo/react';
 
 export function UserMenu() {
   // App
   const app = SmartApp.instance;
+
+  // Culture context
+  const Context = app.userState.context;
 
   // User menu anchor
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement>();
@@ -46,7 +49,7 @@ export function UserMenu() {
           return false;
         }
       })
-      .then((result) => {
+      .then((_result) => {
         // Clear
         app.userLogout();
 
@@ -59,25 +62,27 @@ export function UserMenu() {
     <React.Fragment>
       <IconButton
         edge="end"
-        aria-label="account of current user"
         aria-haspopup="true"
         onClick={handleUserMenuOpen}
         color="inherit"
       >
-        <Avatar alt="肖赞" sx={{ width: 32, height: 32 }}>
-          XZ
-        </Avatar>
+        <Context.Consumer>
+          {(user) => (
+            <UserAvatar title={user.state.name} src={user.state.avatar} />
+          )}
+        </Context.Consumer>
       </IconButton>
       <Menu
+        disableScrollLock={true}
         anchorEl={anchorEl}
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
+          vertical: 'bottom',
+          horizontal: 'left'
         }}
         keepMounted
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'right'
+          horizontal: 'left'
         }}
         open={isMenuOpen}
         onClick={handleMenuClose}

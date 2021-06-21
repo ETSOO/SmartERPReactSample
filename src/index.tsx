@@ -9,6 +9,7 @@ import { NotFound } from './NotFound';
 import Password from './login/Password';
 import { CssBaseline } from '@material-ui/core';
 import Home from './main/Home';
+import { Labels } from '@etsoo/react';
 
 // Root
 const root = document.getElementById('root')!;
@@ -42,7 +43,12 @@ ReactDOM.render(
     <CssBaseline />
     <CultureStateProvider>
       <CultureStateContext.Consumer>
-        {(value) => <NotifierProvider labels={value.state.resources} />}
+        {(value) => {
+          const resouces = value.state.resources;
+          console.log('ok');
+          Labels.setLabels(resouces);
+          return <NotifierProvider labels={resouces} />;
+        }}
       </CultureStateContext.Consumer>
       <UserStateProvider
         update={(dispatch) => {

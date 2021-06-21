@@ -2,9 +2,10 @@ import { RouteComponentProps } from '@reach/router';
 import { DashboardView } from '../models/DashboardView';
 import { SmartApp } from '../app/SmartApp';
 import React from 'react';
-import { Container, List, ListItem, ListItemText } from '@material-ui/core';
+import { List, ListItem, ListItemText } from '@material-ui/core';
 import { DeviceDto } from '../models/DeviceDto';
 import { UserDetector } from '../app/UserDetector';
+import { CommonPage } from '@etsoo/react';
 
 function Dashboard(_props: RouteComponentProps) {
   // App
@@ -17,25 +18,23 @@ function Dashboard(_props: RouteComponentProps) {
   const [devices, setDevices] = React.useState<DeviceDto[]>([]);
 
   // Load data
-  const loadData = () => {
-    app.api.get<DashboardView>('System/Dashboard').then((view) => {
-      if (view == null) return;
-
-      setDevices(view.devices);
-    });
+  const loadData = async () => {
+    const view = await app.api.get<DashboardView>('System/Dashboard');
+    if (view == null) return;
+    setDevices(view.devices);
   };
 
   return (
-    <React.Fragment>
+    <CommonPage onRefresh={loadData}>
       <UserDetector success={loadData} />
-      <List>
+      <List disablePadding={true}>
         <ListItem>
           <Context.Consumer>
             {(user) => <ListItemText primary={user.state.name + ', welcome'} />}
           </Context.Consumer>
         </ListItem>
         {devices.map((device, _index, _devices) => (
-          <ListItem key={device.id}>
+          <ListItem key={device.id} disableGutters={true}>
             <ListItemText
               primary={device.name}
               secondary={app.formatDate(device.lastSuccessLoginDate, 'ds')}
@@ -43,7 +42,7 @@ function Dashboard(_props: RouteComponentProps) {
           </ListItem>
         ))}
       </List>
-    </React.Fragment>
+    </CommonPage>
   );
 }
 
