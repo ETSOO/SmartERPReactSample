@@ -112,6 +112,7 @@ function CallbackComplete(props: RouteComponentProps<{ username: string }>) {
       <TextFieldEx
         label={app.get('yourPassword')}
         showPassword={true}
+        autoComplete="new-password"
         autoFocus
         inputRef={passwordRef}
         ref={passwordMethodRef}

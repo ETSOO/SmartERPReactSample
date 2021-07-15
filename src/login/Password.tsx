@@ -138,7 +138,7 @@ function Password(props: RouteComponentProps<{ username: string }>) {
       }
       {...props}
     >
-      <input type="hidden" name="username" value={id} autoComplete="username" />
+      <input hidden name="username" defaultValue={id} autoComplete="username" />
       <HBox spacing={1} alignItems="flex-start">
         <Box sx={{ paddingTop: 3 }}>
           <Lock color="primary" />
@@ -147,10 +147,10 @@ function Password(props: RouteComponentProps<{ username: string }>) {
           name="password"
           label={app.get('yourPassword')}
           showPassword={true}
+          autoComplete="current-password"
           inputRef={passwordRef}
           ref={mRef}
           autoFocus
-          autoComplete="new-password"
           onEnter={(e) => {
             submit();
             e.preventDefault();

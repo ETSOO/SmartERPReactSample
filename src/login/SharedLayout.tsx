@@ -109,7 +109,7 @@ export function SharedLayout(props: SharedLayoutProps) {
         spacing={2}
         boxShadow={1}
         alignItems="flex-start"
-        sx={{ backgroundColor: '#f3f3f3' }}
+        sx={{ backgroundColor: '#fff' }}
       >
         <VBox width="100%">
           <HBox justifyContent="space-between" alignItems="center">

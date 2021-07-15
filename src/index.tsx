@@ -9,7 +9,6 @@ import { NotFound } from './NotFound';
 import Password from './login/Password';
 import { CssBaseline } from '@material-ui/core';
 import Home from './main/Home';
-import { Labels } from '@etsoo/react';
 
 // Root
 const root = document.getElementById('root')!;
@@ -32,48 +31,49 @@ const Terms = React.lazy(() => import('./login/Terms'));
 const NotifierProvider = SmartApp.notifierProvider;
 
 // Culture provider
-const CultureStateContext = SmartApp.cultureState.context;
 const CultureStateProvider = SmartApp.cultureState.provider;
 
 // User state
 const UserStateProvider = app.userState.provider;
 
+// Page state
+const PageStateProvider = SmartApp.pageState.provider;
+
 ReactDOM.render(
   <React.Fragment>
     <CssBaseline />
     <CultureStateProvider>
-      <CultureStateContext.Consumer>
-        {(value) => {
-          const resouces = value.state.resources;
-          console.log('ok');
-          Labels.setLabels(resouces);
-          return <NotifierProvider labels={resouces} />;
-        }}
-      </CultureStateContext.Consumer>
+      <NotifierProvider />
       <UserStateProvider
         update={(dispatch) => {
           app.userStateDispatch = dispatch;
         }}
       >
-        <React.Suspense fallback={null}>
-          <Router basepath={app.settings.homepage} primary={true}>
-            <App path="/" />
+        <PageStateProvider
+          update={(dispatch) => {
+            app.pageStateDispatch = dispatch;
+          }}
+        >
+          <React.Suspense fallback={null}>
+            <Router basepath={app.settings.homepage} primary={true}>
+              <App path="/" />
 
-            <About path="/login/about" />
-            <Register path="/login/register/*" />
-            <RegisterPassword path="/login/registerpassword/:username" />
-            <RegisterVerify path="/login/registerverify/:username" />
-            <RegisterComplete path="/login/registercomplete/:username" />
-            <CallbackVerify path="/login/callbackverify/:username" />
-            <CallbackComplete path="/login/callbackcomplete/:username" />
-            <Password path="/login/password/:username" />
-            <Terms path="/login/terms" />
+              <About path="/login/about" />
+              <Register path="/login/register/*" />
+              <RegisterPassword path="/login/registerpassword/:username" />
+              <RegisterVerify path="/login/registerverify/:username" />
+              <RegisterComplete path="/login/registercomplete/:username" />
+              <CallbackVerify path="/login/callbackverify/:username" />
+              <CallbackComplete path="/login/callbackcomplete/:username" />
+              <Password path="/login/password/:username" />
+              <Terms path="/login/terms" />
 
-            <Home path="/home/*" />
+              <Home path="/home/*" />
 
-            <NotFound default />
-          </Router>
-        </React.Suspense>
+              <NotFound default />
+            </Router>
+          </React.Suspense>
+        </PageStateProvider>
       </UserStateProvider>
     </CultureStateProvider>
   </React.Fragment>,

@@ -12,9 +12,11 @@ import enUSResources from '../i18n/en-US.json';
 import { DataTypes, DomUtils, StorageUtils } from '@etsoo/shared';
 import {
   CultureState,
+  Labels,
   MUGlobal,
   NotificationRenderProps,
   NotifierMU,
+  PageState,
   ReactApp
 } from '@etsoo/react';
 import { ISmartUser } from './SmartUser';
@@ -92,6 +94,14 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
     return SmartApp._cultureState;
   }
 
+  private static _pageState: PageState;
+  /**
+   * Page state
+   */
+  static get pageState() {
+    return SmartApp._pageState;
+  }
+
   /**
    * Setup
    */
@@ -99,7 +109,7 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
     // Settings
     const settings: ISmartSettings = {
       // Merge external configs first
-      ...((window as unknown) as IExternalSettingsHost).settings,
+      ...(window as unknown as IExternalSettingsHost).settings,
 
       // Authorization scheme
       authScheme: ApiAuthorizationScheme.Bearer,
@@ -171,28 +181,66 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
 
     // States
     SmartApp._cultureState = new CultureState(settings.currentCulture);
+    SmartApp._pageState = new PageState();
   }
 
   /**
-   * Go to the login page
+   * Change culture
+   * @param culture New culture definition
    */
-  toLoginPage() {
-    window.location.href = this.transformUrl('/');
+  changeCulture(culture: DataTypes.CultureDefinition) {
+    // Update component labels
+    Labels.setLabels(culture.resources, {
+      notificationMU: {
+        alertTitle: 'warning',
+        alertOK: 'ok',
+        confirmTitle: 'confirm',
+        confirmYes: 'ok',
+        confirmNo: 'cancel',
+        promptTitle: 'prompt',
+        promptCancel: 'cancel',
+        promptOK: 'ok'
+      }
+    });
+
+    // Change culture
+    super.changeCulture(culture);
+
+    // Change page title
+    document.title = this.get<string>('smartERP')!;
   }
 
   /**
-   * Try login
+   * Refresh token
    */
-  tryLogin() {
+  async refreshToken() {
+    // Data
+    const { data, payload } = this.createRefreshData();
+
+    // Check
+    if (data == null || payload == null) return false;
+
+    // Call API
+    const result = await this.api.put<LoginResult>(
+      'Auth/RefreshToken',
+      data,
+      payload
+    );
+
+    if (result == null) return false;
+
+    if (result.success) {
+      // Auto success
+      this.doSuccess(result, payload);
+    }
+  }
+
+  private createRefreshData = () => {
     // Token
     const refreshToken = this.getCacheToken();
     if (refreshToken == null || refreshToken === '') {
-      this.toLoginPage();
-      return;
+      return {};
     }
-
-    // Keep
-    const keep = StorageUtils.getLocalData(Constants.FieldLoginKeep, false);
 
     // Refresh token
     const fieldName = Constants.TokenHeaderRefresh;
@@ -208,21 +256,51 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
       config: { headers: { [fieldName]: refreshToken } }
     };
 
-    // Success
-    const doSuccess = (result: LoginResult) => {
-      // Token
-      const newRefreshToken = this.getResponseToken(payload.response);
-      if (newRefreshToken == null || result.data == null) {
-        this.toLoginPage();
-        return;
-      }
+    return { data, payload };
+  };
 
-      // User data
-      const userData = result.data;
+  // Success
+  private doSuccess = (
+    result: LoginResult,
+    payload: IApiPayload<LoginResult, any>
+  ) => {
+    // Token
+    const newRefreshToken = this.getResponseToken(payload.response);
+    if (newRefreshToken == null || result.data == null) {
+      return false;
+    }
 
-      // User login
-      this.userLogin(userData, newRefreshToken, keep);
-    };
+    // Keep
+    const keep = StorageUtils.getLocalData(Constants.FieldLoginKeep, false);
+
+    // User data
+    const userData = result.data;
+
+    // User login
+    this.userLogin(userData, newRefreshToken, keep);
+
+    return true;
+  };
+
+  /**
+   * Go to the login page
+   */
+  toLoginPage() {
+    window.location.href = this.transformUrl('/');
+  }
+
+  /**
+   * Try login
+   */
+  tryLogin() {
+    // Data
+    const { data, payload } = this.createRefreshData();
+
+    // Check
+    if (data == null || payload == null) {
+      this.toLoginPage();
+      return;
+    }
 
     // Call API
     this.api
@@ -232,7 +310,9 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
 
         if (result.success) {
           // Auto success
-          doSuccess(result);
+          if (!this.doSuccess(result, payload)) {
+            this.toLoginPage();
+          }
         } else if (result.type === 'TokenExpired') {
           // Dialog to receive password
           this.notifier.prompt(
@@ -247,7 +327,7 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
                 .then((result) => {
                   if (result != null && result.success) {
                     // Manual success
-                    doSuccess(result);
+                    this.doSuccess(result, payload);
                   }
                 });
             },

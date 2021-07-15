@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import LockIcon from '@material-ui/icons/Lock';
 import { SmartApp } from './SmartApp';
 import { Link } from '@reach/router';
 import { UserAvatar } from '@etsoo/react';
@@ -17,7 +18,7 @@ export function UserMenu() {
   // App
   const app = SmartApp.instance;
 
-  // Culture context
+  // User context
   const Context = app.userState.context;
 
   // User menu anchor
@@ -73,6 +74,32 @@ export function UserMenu() {
         </Context.Consumer>
       </IconButton>
       <Menu
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: 'visible',
+            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            mt: -0.4,
+            '& .MuiAvatar-root': {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1
+            },
+            '&:before': {
+              content: '""',
+              display: 'block',
+              position: 'absolute',
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: 'background.paper',
+              transform: 'translateY(-50%) rotate(45deg)',
+              zIndex: 0
+            }
+          }
+        }}
         disableScrollLock={true}
         anchorEl={anchorEl}
         anchorOrigin={{
@@ -88,11 +115,17 @@ export function UserMenu() {
         onClick={handleMenuClose}
         onClose={handleMenuClose}
       >
-        <MenuItem component={Link} to="/home/myprofile">
+        <MenuItem component={Link} to="/home/updateavatar">
           <ListItemIcon>
             <AccountCircleIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{app.get('menuMyProfile')}</ListItemText>
+          <ListItemText>{app.get('updateAvatar')}</ListItemText>
+        </MenuItem>
+        <MenuItem component={Link} to="/home/changepassword">
+          <ListItemIcon>
+            <LockIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>{app.get('changePassword')}</ListItemText>
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleSignout}>
