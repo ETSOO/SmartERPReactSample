@@ -5,10 +5,10 @@ import { Button } from '@material-ui/core';
 import { RouteComponentProps } from '@reach/router';
 import { useFormik } from 'formik';
 import React from 'react';
-import { Helper } from '../app/Helper';
-import { SmartApp } from '../app/SmartApp';
-import { UserDetector } from '../app/UserDetector';
-import Yup from '../app/YupHelper';
+import { Helper } from '../../app/Helper';
+import { SmartApp } from '../../app/SmartApp';
+import { UserDetector } from '../../app/UserDetector';
+import Yup from '../../app/YupHelper';
 
 // App
 const app = SmartApp.instance;

@@ -9,7 +9,7 @@ import { ISmartSettings } from './SmartSettings';
 
 import zhCNResources from '../i18n/zh-CN.json';
 import enUSResources from '../i18n/en-US.json';
-import { DataTypes, DomUtils, StorageUtils } from '@etsoo/shared';
+import { DataTypes, DomUtils, StorageUtils, Utils } from '@etsoo/shared';
 import {
   CultureState,
   Labels,
@@ -124,7 +124,7 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
       cultures: supportedCultures,
 
       // Browser's time zone
-      timeZone: DomUtils.getTimeZone(),
+      timeZone: Utils.getTimeZone(),
 
       // Current country
       currentCountry: {} as DataTypes.Country,

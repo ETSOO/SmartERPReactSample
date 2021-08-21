@@ -35,7 +35,7 @@ function Dashboard(props: RouteComponentProps) {
 
   // Load more history
   const loadMoreHistory = () => {
-    props.navigate!(app.transformUrl('/home/loginhistory'));
+    props.navigate!(app.transformUrl('/home/user/loginhistory'));
   };
 
   React.useEffect(() => {

@@ -6,8 +6,8 @@ import {
 import { Stack } from '@material-ui/core';
 import { RouteComponentProps } from '@reach/router';
 import React from 'react';
-import { SmartApp } from '../app/SmartApp';
-import { UserDetector } from '../app/UserDetector';
+import { SmartApp } from '../../app/SmartApp';
+import { UserDetector } from '../../app/UserDetector';
 
 function UpdateAvatar(props: RouteComponentProps) {
   // Destruct

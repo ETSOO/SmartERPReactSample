@@ -7,7 +7,13 @@ import { SmartApp } from './app/SmartApp';
 import { Router } from '@reach/router';
 import { NotFound } from './NotFound';
 import Password from './login/Password';
-import { CssBaseline } from '@material-ui/core';
+import {
+  createTheme,
+  CssBaseline,
+  LinearProgress,
+  ThemeProvider
+} from '@material-ui/core';
+import * as locales from '@material-ui/core/locale';
 import Home from './main/Home';
 
 // Root
@@ -32,6 +38,10 @@ const NotifierProvider = SmartApp.notifierProvider;
 
 // Culture provider
 const CultureStateProvider = SmartApp.cultureState.provider;
+const CultureContext = SmartApp.cultureState.context;
+
+// All supported locales of the UI framework
+type SupportedLocales = keyof typeof locales;
 
 // User state
 const UserStateProvider = app.userState.provider;
@@ -39,44 +49,60 @@ const UserStateProvider = app.userState.provider;
 // Page state
 const PageStateProvider = SmartApp.pageState.provider;
 
+// Theme
+const theme = createTheme({});
+
 ReactDOM.render(
-  <React.Fragment>
-    <CssBaseline />
+  <ThemeProvider theme={theme}>
     <CultureStateProvider>
-      <NotifierProvider />
-      <UserStateProvider
-        update={(dispatch) => {
-          app.userStateDispatch = dispatch;
-        }}
-      >
-        <PageStateProvider
-          update={(dispatch) => {
-            app.pageStateDispatch = dispatch;
-          }}
-        >
-          <React.Suspense fallback={null}>
-            <Router basepath={app.settings.homepage} primary={true}>
-              <App path="/" />
+      <CultureContext.Consumer>
+        {(culture) => (
+          <ThemeProvider
+            theme={(outerTheme) =>
+              createTheme(
+                outerTheme,
+                locales[culture.state.name.replace('-', '') as SupportedLocales]
+              )
+            }
+          >
+            <NotifierProvider />
+            <UserStateProvider
+              update={(dispatch) => {
+                app.userStateDispatch = dispatch;
+              }}
+            >
+              <PageStateProvider
+                update={(dispatch) => {
+                  app.pageStateDispatch = dispatch;
+                }}
+              >
+                <CssBaseline />
+                <React.Suspense fallback={<LinearProgress />}>
+                  <Router basepath={app.settings.homepage} primary={true}>
+                    <App path="/" />
 
-              <About path="/login/about" />
-              <Register path="/login/register/*" />
-              <RegisterPassword path="/login/registerpassword/:username" />
-              <RegisterVerify path="/login/registerverify/:username" />
-              <RegisterComplete path="/login/registercomplete/:username" />
-              <CallbackVerify path="/login/callbackverify/:username" />
-              <CallbackComplete path="/login/callbackcomplete/:username" />
-              <Password path="/login/password/:username" />
-              <Terms path="/login/terms" />
+                    <About path="/login/about" />
+                    <Register path="/login/register/*" />
+                    <RegisterPassword path="/login/registerpassword/:username" />
+                    <RegisterVerify path="/login/registerverify/:username" />
+                    <RegisterComplete path="/login/registercomplete/:username" />
+                    <CallbackVerify path="/login/callbackverify/:username" />
+                    <CallbackComplete path="/login/callbackcomplete/:username" />
+                    <Password path="/login/password/:username" />
+                    <Terms path="/login/terms" />
 
-              <Home path="/home/*" />
+                    <Home path="/home/*" />
 
-              <NotFound default />
-            </Router>
-          </React.Suspense>
-        </PageStateProvider>
-      </UserStateProvider>
+                    <NotFound default />
+                  </Router>
+                </React.Suspense>
+              </PageStateProvider>
+            </UserStateProvider>
+          </ThemeProvider>
+        )}
+      </CultureContext.Consumer>
     </CultureStateProvider>
-  </React.Fragment>,
+  </ThemeProvider>,
   root
 );
 

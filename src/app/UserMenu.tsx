@@ -104,24 +104,24 @@ export function UserMenu() {
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left'
+          horizontal: 'right'
         }}
         keepMounted
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'left'
+          horizontal: 'right'
         }}
         open={isMenuOpen}
         onClick={handleMenuClose}
         onClose={handleMenuClose}
       >
-        <MenuItem component={Link} to="/home/updateavatar">
+        <MenuItem component={Link} to="/home/user/updateavatar">
           <ListItemIcon>
             <AccountCircleIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{app.get('updateAvatar')}</ListItemText>
         </MenuItem>
-        <MenuItem component={Link} to="/home/changepassword">
+        <MenuItem component={Link} to="/home/user/changepassword">
           <ListItemIcon>
             <LockIcon fontSize="small" />
           </ListItemIcon>
