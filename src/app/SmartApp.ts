@@ -1,7 +1,6 @@
 import { IExternalSettingsHost } from '@etsoo/appscript';
 import {
   ApiAuthorizationScheme,
-  ApiDataError,
   createClient,
   IApiPayload
 } from '@etsoo/restclient';
@@ -145,22 +144,6 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
       window.location.hostname
     );
 
-    // Global API error handler
-    api.onError = (error: ApiDataError) => {
-      // Error code
-      const status = error.response
-        ? api.transformResponse(error.response).status
-        : undefined;
-
-      if (status === 401) {
-        // When status is equal to 401, unauthorized, try login
-        app.tryLogin();
-      } else {
-        // Report the error
-        notifier.alert(error.toString());
-      }
-    };
-
     // App
     const app = new SmartApp(settings, api, notifier);
 
@@ -292,7 +275,7 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
   /**
    * Try login
    */
-  tryLogin() {
+  override tryLogin() {
     // Data
     const { data, payload } = this.createRefreshData();
 

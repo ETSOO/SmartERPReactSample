@@ -7,7 +7,6 @@ import { Stack } from '@material-ui/core';
 import { RouteComponentProps } from '@reach/router';
 import React from 'react';
 import { SmartApp } from '../../app/SmartApp';
-import { UserDetector } from '../../app/UserDetector';
 
 function UpdateAvatar(props: RouteComponentProps) {
   // Destruct
@@ -46,7 +45,6 @@ function UpdateAvatar(props: RouteComponentProps) {
 
   return (
     <CommonPage sx={{ width: 'fit-content' }}>
-      <UserDetector />
       <Stack direction={{ xs: 'column', sm: 'column', md: 'row' }} spacing={1}>
         <Context.Consumer>
           {(user) => (

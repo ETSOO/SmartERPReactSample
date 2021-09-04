@@ -7,7 +7,6 @@ import { useFormik } from 'formik';
 import React from 'react';
 import { Helper } from '../../app/Helper';
 import { SmartApp } from '../../app/SmartApp';
-import { UserDetector } from '../../app/UserDetector';
 import Yup from '../../app/YupHelper';
 
 // App
@@ -111,7 +110,6 @@ function ChangePassword(_props: RouteComponentProps) {
 
   return (
     <CommonPage maxWidth="xs">
-      <UserDetector />
       <form
         onSubmit={(event) => {
           formik.handleSubmit(event);

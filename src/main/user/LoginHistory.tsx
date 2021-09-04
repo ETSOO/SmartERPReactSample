@@ -23,7 +23,6 @@ import InfoIcon from '@material-ui/icons/Info';
 import { RouteComponentProps } from '@reach/router';
 import React from 'react';
 import { SmartApp } from '../../app/SmartApp';
-import { UserDetector } from '../../app/UserDetector';
 import { LoginHistoryDto } from '../../models/LoginHistoryDto';
 
 // Multiple states
@@ -60,7 +59,6 @@ function LoginHistory(props: RouteComponentProps) {
 
   return (
     <React.Fragment>
-      <UserDetector success={reloadData} />
       <ResponsivePage<LoginHistoryDto>
         mRef={ref}
         defaultOrderBy="creation"

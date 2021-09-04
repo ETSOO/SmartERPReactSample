@@ -12,7 +12,6 @@ import {
   ListItemText
 } from '@material-ui/core';
 import { DeviceDto } from '../models/DeviceDto';
-import { UserDetector } from '../app/UserDetector';
 import { CommonPage } from '@etsoo/react';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
@@ -44,8 +43,7 @@ function Dashboard(props: RouteComponentProps) {
   }, [app]);
 
   return (
-    <CommonPage onRefresh={reloadData}>
-      <UserDetector success={reloadData} />
+    <CommonPage onUpdate={reloadData}>
       <Card>
         <Context.Consumer>
           {(user) => (
