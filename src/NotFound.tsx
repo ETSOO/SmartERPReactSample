@@ -1,4 +1,4 @@
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { RouteComponentProps, navigate } from '@reach/router';
 import { SmartApp } from './app/SmartApp';
 import { SharedLayout } from './login/SharedLayout';

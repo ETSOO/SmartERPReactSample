@@ -1,11 +1,11 @@
 import React from 'react';
 import { HBox, ItemList, TextFieldEx, TextFieldExMethods } from '@etsoo/react';
 import { DataTypes, StorageUtils } from '@etsoo/shared';
-import { Box, Button, Link } from '@material-ui/core';
+import { Box, Button, Link } from '@mui/material';
 import { RouteComponentProps } from '@reach/router';
 import { SmartApp } from './app/SmartApp';
 import { SharedLayout } from './login/SharedLayout';
-import { AccountCircle, Language } from '@material-ui/icons';
+import { AccountCircle, Language } from '@mui/icons-material';
 
 import './App.css';
 import { IActionResult } from '@etsoo/appscript';

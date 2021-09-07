@@ -1,7 +1,7 @@
 import { IActionResult } from '@etsoo/appscript';
 import { CommonPage, TextFieldEx, VBox } from '@etsoo/react';
 import { DomUtils } from '@etsoo/shared';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { RouteComponentProps } from '@reach/router';
 import { useFormik } from 'formik';
 import React from 'react';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { TextFieldEx } from '@etsoo/react';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { Link, RouteComponentProps } from '@reach/router';
 import { SmartApp } from '../app/SmartApp';
 import { SharedLayout } from './SharedLayout';

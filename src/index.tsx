@@ -12,8 +12,8 @@ import {
   CssBaseline,
   LinearProgress,
   ThemeProvider
-} from '@material-ui/core';
-import * as locales from '@material-ui/core/locale';
+} from '@mui/material';
+import * as locales from '@mui/material/locale';
 import Home from './main/Home';
 
 // Root

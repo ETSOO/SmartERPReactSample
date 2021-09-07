@@ -10,10 +10,10 @@ import {
   List,
   ListItem,
   ListItemText
-} from '@material-ui/core';
+} from '@mui/material';
 import { DeviceDto } from '../models/DeviceDto';
 import { CommonPage } from '@etsoo/react';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 
 function Dashboard(props: RouteComponentProps) {
   // App

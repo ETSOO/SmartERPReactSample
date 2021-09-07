@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography } from '@mui/material';
 import { RouteComponentProps } from '@reach/router';
 import { HBox, VBox } from '@etsoo/react';
 import logo from './../images/etsoo.png';

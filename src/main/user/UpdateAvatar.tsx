@@ -3,7 +3,7 @@ import {
   UserAvatarEditor,
   UserAvatarEditorToBlob
 } from '@etsoo/react';
-import { Stack } from '@material-ui/core';
+import { Stack } from '@mui/material';
 import { RouteComponentProps } from '@reach/router';
 import React from 'react';
 import { SmartApp } from '../../app/SmartApp';

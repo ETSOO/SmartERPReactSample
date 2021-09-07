@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, FormControlLabel, Switch, Link, Box } from '@material-ui/core';
+import { Button, FormControlLabel, Switch, Link, Box } from '@mui/material';
 import { Redirect, RouteComponentProps } from '@reach/router';
 import { SmartApp } from '../app/SmartApp';
 import { SharedLayout } from './SharedLayout';
 import { IActionResult, IResultData } from '@etsoo/appscript';
 import { HBox, TextFieldEx, TextFieldExMethods } from '@etsoo/react';
-import { Lock } from '@material-ui/icons';
+import { Lock } from '@mui/icons-material';
 import { StorageUtils } from '@etsoo/shared';
 import { Constants } from '../app/Constants';
 import { LoginResult } from '../models/LoginResult';

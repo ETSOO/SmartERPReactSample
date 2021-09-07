@@ -6,10 +6,10 @@ import {
   ListItemText,
   Menu,
   MenuItem
-} from '@material-ui/core';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import LockIcon from '@material-ui/icons/Lock';
+} from '@mui/material';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LockIcon from '@mui/icons-material/Lock';
 import { SmartApp } from './SmartApp';
 import { Link } from '@reach/router';
 import { UserAvatar } from '@etsoo/react';

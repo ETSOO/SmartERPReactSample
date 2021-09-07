@@ -18,8 +18,8 @@ import {
   CardContent,
   LinearProgress,
   Typography
-} from '@material-ui/core';
-import InfoIcon from '@material-ui/icons/Info';
+} from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import { RouteComponentProps } from '@reach/router';
 import React from 'react';
 import { SmartApp } from '../../app/SmartApp';
@@ -110,7 +110,6 @@ function LoginHistory(props: RouteComponentProps) {
             }}
           />
         ]}
-        itemSize={150}
         loadData={async (data) => {
           // Format data
           data.success = data.success == null ? null : data.success === 'true';
@@ -179,6 +178,7 @@ function LoginHistory(props: RouteComponentProps) {
             }
           }
         ]}
+        itemSize={150}
         innerItemRenderer={({ data }) => {
           return data == null ? (
             <LinearProgress />

@@ -12,19 +12,17 @@ import {
   Typography,
   useMediaQuery,
   useTheme
-} from '@material-ui/core';
-import MuiAppBar, {
-  AppBarProps as MuiAppBarProps
-} from '@material-ui/core/AppBar';
+} from '@mui/material';
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 import { Link, Router } from '@reach/router';
 import { SmartApp } from '../app/SmartApp';
 import { UserMenu } from '../app/UserMenu';
 import Dashboard from './Dashboard';
 import React from 'react';
-import MenuIcon from '@material-ui/icons/Menu';
-import HistoryIcon from '@material-ui/icons/History';
-import HomeIcon from '@material-ui/icons/Home';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import MenuIcon from '@mui/icons-material/Menu';
+import HistoryIcon from '@mui/icons-material/History';
+import HomeIcon from '@mui/icons-material/Home';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 // Lazy load components
 const LoginHistory = React.lazy(() => import('./user/LoginHistory'));

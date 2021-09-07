@@ -6,10 +6,10 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText
-} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import HistoryIcon from '@material-ui/icons/History';
-import HomeIcon from '@material-ui/icons/Home';
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import HistoryIcon from '@mui/icons-material/History';
+import HomeIcon from '@mui/icons-material/Home';
 import { SmartApp } from './SmartApp';
 import { Link } from '@reach/router';
 
