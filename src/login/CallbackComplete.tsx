@@ -6,7 +6,7 @@ import { SharedLayout } from './SharedLayout';
 import { TextFieldEx, TextFieldExMethods } from '@etsoo/react';
 import { Helper } from '../app/Helper';
 import { StorageUtils } from '@etsoo/shared';
-import { ActionResultError, IActionResult } from '@etsoo/appscript';
+import { IActionResult } from '@etsoo/appscript';
 import { Constants } from '../app/Constants';
 import { ResetPasswordRQ } from '../RQ/ResetPasswordRQ';
 
@@ -95,7 +95,7 @@ function CallbackComplete(props: RouteComponentProps<{ username: string }>) {
       return;
     }
 
-    app.notifier.alert(ActionResultError.format(result));
+    app.alertResult(result);
   };
 
   return (

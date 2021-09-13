@@ -5,11 +5,7 @@ import { SmartApp } from '../app/SmartApp';
 import { SharedLayout } from './SharedLayout';
 import { StorageUtils } from '@etsoo/shared';
 import { CountdownButton, TextFieldEx, TextFieldExMethods } from '@etsoo/react';
-import {
-  ActionResultError,
-  ActionResultId,
-  IActionResult
-} from '@etsoo/appscript';
+import { ActionResultId, IActionResult } from '@etsoo/appscript';
 import { Constants } from '../app/Constants';
 
 function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
@@ -65,7 +61,7 @@ function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
 
     if (!result.success) {
       // Popup
-      app.notifier.alert(ActionResultError.format(result));
+      app.alertResult(result);
       return 0;
     }
 

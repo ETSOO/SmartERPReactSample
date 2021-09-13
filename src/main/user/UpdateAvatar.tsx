@@ -32,7 +32,7 @@ function UpdateAvatar(props: RouteComponentProps) {
     var result = await app.api.put<string>('User/UploadAvatar', form);
     if (result == null) return;
 
-    // Refresh token
+    // Refresh token to get the updated avatar
     app.refreshToken().then(() => {
       navigate!(app.transformUrl('/home/'));
     });

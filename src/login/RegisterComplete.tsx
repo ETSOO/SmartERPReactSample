@@ -5,7 +5,7 @@ import { Redirect, RouteComponentProps } from '@reach/router';
 import { SmartApp } from '../app/SmartApp';
 import { SharedLayout } from './SharedLayout';
 import { StorageUtils } from '@etsoo/shared';
-import { ActionResultError, IActionResult } from '@etsoo/appscript';
+import { IActionResult } from '@etsoo/appscript';
 import { Constants } from '../app/Constants';
 import { RegisterRQ } from '../RQ/RegisterRQ';
 
@@ -66,7 +66,7 @@ function RegisterComplete(props: RouteComponentProps<{ username?: string }>) {
       return;
     }
 
-    app.notifier.alert(ActionResultError.format(result));
+    app.alertResult(result);
   };
 
   return (
