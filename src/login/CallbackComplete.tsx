@@ -11,14 +11,21 @@ import { Constants } from '../app/Constants';
 import { ResetPasswordRQ } from '../RQ/ResetPasswordRQ';
 
 function CallbackComplete(props: RouteComponentProps<{ username: string }>) {
-  // Destructure
-  const { navigate } = props;
-
   // App
   const app = SmartApp.instance;
 
-  // Password tip
-  const passwordTip = app.get('passwordTip');
+  // Labels
+  const labels = app.getLabels(
+    'passwordTip',
+    'passwordRepeatError',
+    'createPassword',
+    'yourPassword',
+    'repeatPassword',
+    'submit'
+  );
+
+  // Destructure
+  const { navigate } = props;
 
   // Refs
   const passwordRef = React.useRef<HTMLInputElement>();
@@ -48,7 +55,7 @@ function CallbackComplete(props: RouteComponentProps<{ username: string }>) {
     }
 
     if (!Helper.isValidPassword(password.value)) {
-      passwordMethodRef.current?.setError(app.get('passwordTip'));
+      passwordMethodRef.current?.setError(labels.passwordTip);
       password.focus();
       return false;
     }
@@ -71,7 +78,7 @@ function CallbackComplete(props: RouteComponentProps<{ username: string }>) {
     }
 
     if (repeat.value !== passwordRef.current?.value) {
-      repeatMethodRef.current?.setError(app.get('passwordRepeatError'));
+      repeatMethodRef.current?.setError(labels.passwordRepeatError);
       return;
     }
 
@@ -100,17 +107,17 @@ function CallbackComplete(props: RouteComponentProps<{ username: string }>) {
 
   return (
     <SharedLayout
-      title={app.get('createPassword')!}
+      title={labels.createPassword}
       subTitle={<Typography variant="subtitle2">{id}</Typography>}
       buttons={[
         <Button variant="contained" key="next" onClick={submitClick}>
-          {app.get('submit')}
+          {labels.submit}
         </Button>
       ]}
       {...props}
     >
       <TextFieldEx
-        label={app.get('yourPassword')}
+        label={labels.yourPassword}
         showPassword={true}
         autoComplete="new-password"
         autoFocus
@@ -122,7 +129,7 @@ function CallbackComplete(props: RouteComponentProps<{ username: string }>) {
         }}
       />
       <TextFieldEx
-        label={app.get('repeatPassword')}
+        label={labels.repeatPassword}
         showPassword={true}
         inputRef={repeatRef}
         ref={repeatMethodRef}
@@ -131,7 +138,7 @@ function CallbackComplete(props: RouteComponentProps<{ username: string }>) {
           e.preventDefault();
         }}
       />
-      <Typography variant="body2">* {passwordTip}</Typography>
+      <Typography variant="body2">* {labels.passwordTip}</Typography>
     </SharedLayout>
   );
 }

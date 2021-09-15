@@ -12,6 +12,15 @@ function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
   // App
   const app = SmartApp.instance;
 
+  // Labels
+  const labels = app.getLabels(
+    'enterCodeTip',
+    'verification',
+    'resending',
+    'enterCode',
+    'submit'
+  );
+
   // Destruct
   const { navigate, username } = props;
 
@@ -30,7 +39,7 @@ function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
   const id = decodeURIComponent(username);
 
   // Tip
-  const enterCodeTip = app.get('enterCodeTip')?.replace('{0}', id);
+  const enterCodeTip = labels.enterCodeTip.replace('{0}', id);
 
   // Resending
   const resending = async () => {
@@ -107,7 +116,7 @@ function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
 
   return (
     <SharedLayout
-      title={app.get('verification')!}
+      title={labels.verification}
       subTitle={<Typography variant="subtitle2">{enterCodeTip}</Typography>}
       buttons={[
         <CountdownButton
@@ -118,16 +127,16 @@ function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
           }}
           onAction={resending}
         >
-          {app.get('resending')}
+          {labels.resending}
         </CountdownButton>,
         <Button variant="contained" key="submit" onClick={submit}>
-          {app.get('submit')}
+          {labels.submit}
         </Button>
       ]}
       {...props}
     >
       <TextFieldEx
-        label={app.get('enterCode')}
+        label={labels.enterCode}
         autoCorrect="off"
         autoCapitalize="none"
         inputProps={{ inputMode: 'numeric' }}

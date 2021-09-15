@@ -8,12 +8,15 @@ function About(props: RouteComponentProps) {
   // App
   const app = SmartApp.instance;
 
+  // Labels
+  const labels = app.getLabels('about', 'back');
+
   return (
     <SharedLayout
-      title={app.get('about')!}
+      title={labels.about}
       buttons={
         <Button variant="contained" component={Link} to={app.transformUrl('/')}>
-          {app.get('back')}
+          {labels.back}
         </Button>
       }
       {...props}

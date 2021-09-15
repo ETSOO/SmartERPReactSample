@@ -9,11 +9,14 @@ import React from 'react';
 import { SmartApp } from '../../app/SmartApp';
 
 function UpdateAvatar(props: RouteComponentProps) {
-  // Destruct
-  const { navigate } = props;
-
   // App
   const app = SmartApp.instance;
+
+  // Labels
+  const labels = app.getLabels('avatar');
+
+  // Destruct
+  const { navigate } = props;
 
   // User context
   const Context = app.userState.context;
@@ -40,7 +43,7 @@ function UpdateAvatar(props: RouteComponentProps) {
 
   React.useEffect(() => {
     // Page title
-    app.setPageTitle(app.get('updateAvatar')!);
+    app.setPageKey('updateAvatar');
   }, [app]);
 
   return (
@@ -50,7 +53,7 @@ function UpdateAvatar(props: RouteComponentProps) {
           {(user) => (
             <img
               src={user.state.avatar}
-              alt={app.get('avatar')}
+              alt={labels.avatar}
               style={{
                 width: '308px',
                 height: '300px',

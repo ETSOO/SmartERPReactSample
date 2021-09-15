@@ -34,6 +34,21 @@ function LoginHistory(props: RouteComponentProps) {
   // App
   const app = SmartApp.instance;
 
+  // Labels
+  const labels = app.getLabels(
+    'device',
+    'successLogin',
+    'no',
+    'yes',
+    'creation',
+    'startDate',
+    'endDate',
+    'language',
+    'success',
+    'description',
+    'actions'
+  );
+
   // Refs
   const ref = React.createRef<ScrollerListForwardRef>();
 
@@ -54,7 +69,7 @@ function LoginHistory(props: RouteComponentProps) {
 
   React.useEffect(() => {
     // Page title
-    app.setPageTitle(app.get('menuLoginHistory')!);
+    app.setPageKey('menuLoginHistory');
   }, [app]);
 
   return (
@@ -65,7 +80,7 @@ function LoginHistory(props: RouteComponentProps) {
         pageProps={{ onRefresh: reloadData }}
         fields={[
           <Tiplist<IdLabelDto>
-            label={app.get('device')!}
+            label={labels.device}
             name="deviceId"
             search
             loadData={async (keyword, id) => {
@@ -80,16 +95,16 @@ function LoginHistory(props: RouteComponentProps) {
             }}
           />,
           <SelectEx<IdLabelDto>
-            label={app.get('successLogin')!}
+            label={labels.successLogin}
             name="success"
             search
             options={[
-              { id: 'false', label: app.get('no')! },
-              { id: 'true', label: app.get('yes')! }
+              { id: 'false', label: labels.no },
+              { id: 'true', label: labels.yes }
             ]}
           />,
           <SearchField
-            label={app.get('startDate')!}
+            label={labels.startDate}
             name="creationStart"
             type="date"
             onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
@@ -98,7 +113,7 @@ function LoginHistory(props: RouteComponentProps) {
             inputProps={{ max: DateUtils.formatForInput() }}
           />,
           <SearchField
-            label={app.get('endDate')!}
+            label={labels.endDate}
             name="creationEnd"
             type="date"
             inputProps={{
@@ -125,32 +140,32 @@ function LoginHistory(props: RouteComponentProps) {
             field: 'creation',
             type: GridDataType.DateTime,
             width: 164,
-            header: app.get('creation'),
+            header: labels.creation,
             sortable: true,
             sortAsc: false
           },
-          { field: 'deviceName', header: app.get('device') },
+          { field: 'deviceName', header: labels.device },
           {
             field: 'language',
             width: 90,
-            header: app.get('language'),
+            header: labels.language,
             sortable: true
           },
           {
             field: 'success',
             width: 90,
             type: GridDataType.Boolean,
-            header: app.get('success'),
+            header: labels.success,
             sortable: false
           },
           {
             field: 'reason',
             width: 150,
-            header: app.get('description')
+            header: labels.description
           },
           {
             width: 80,
-            header: app.get('actions'),
+            header: labels.actions,
             align: 'center',
             cellRenderer: ({
               data,

@@ -7,14 +7,23 @@ import { SharedLayout } from './SharedLayout';
 import { IActionResult } from '@etsoo/appscript';
 
 function Register(props: RouteComponentProps<{ '*': string }>) {
+  // App
+  const app = SmartApp.instance;
+
+  // Labels
+  const labels = app.getLabels(
+    'userFound',
+    'register',
+    'back',
+    'nextStep',
+    'loginId'
+  );
+
   // Destructure
   const { navigate } = props;
 
   let username = props['*'];
   if (username) username = decodeURIComponent(username);
-
-  // App
-  const app = SmartApp.instance;
 
   // Login id field
   const loginRef = React.useRef<HTMLInputElement>();
@@ -40,7 +49,7 @@ function Register(props: RouteComponentProps<{ '*': string }>) {
     if (result != null) {
       if (result.success) {
         // Account registered
-        app.notifier.confirm(app.get('userFound')!, undefined, (value) => {
+        app.notifier.confirm(labels.userFound, undefined, (value) => {
           if (value) {
             navigate!(
               app.transformUrl('/login/password/' + encodeURIComponent(id))
@@ -60,7 +69,7 @@ function Register(props: RouteComponentProps<{ '*': string }>) {
 
   return (
     <SharedLayout
-      title={app.get('register')!}
+      title={labels.register}
       buttons={[
         <Button
           variant="outlined"
@@ -68,16 +77,16 @@ function Register(props: RouteComponentProps<{ '*': string }>) {
           key="back"
           to={app.transformUrl('/')}
         >
-          {app.get('back')}
+          {labels.back}
         </Button>,
         <Button variant="contained" key="next" onClick={nextClick}>
-          {app.get('nextStep')}
+          {labels.nextStep}
         </Button>
       ]}
       {...props}
     >
       <TextFieldEx
-        label={app.get('loginId')}
+        label={labels.loginId}
         inputRef={loginRef}
         autoFocus
         autoCorrect="off"

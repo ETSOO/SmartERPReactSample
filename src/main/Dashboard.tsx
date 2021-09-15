@@ -19,6 +19,9 @@ function Dashboard(props: RouteComponentProps) {
   // App
   const app = SmartApp.instance;
 
+  // Labels
+  const labels = app.getLabels('more');
+
   // User context
   const Context = app.userState.context;
 
@@ -39,7 +42,7 @@ function Dashboard(props: RouteComponentProps) {
 
   React.useEffect(() => {
     // Page title
-    app.setPageTitle(app.get('menuHome')!);
+    app.setPageKey('menuHome');
   }, [app]);
 
   return (
@@ -50,7 +53,7 @@ function Dashboard(props: RouteComponentProps) {
             <CardHeader
               title={user.state.name + ', welcome'}
               action={
-                <IconButton title={app.get('more')} onClick={loadMoreHistory}>
+                <IconButton title={labels.more} onClick={loadMoreHistory}>
                   <MoreHorizIcon />
                 </IconButton>
               }

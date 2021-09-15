@@ -16,6 +16,15 @@ function Password(props: RouteComponentProps<{ username: string }>) {
   // App
   const app = SmartApp.instance;
 
+  // Labels
+  const labels = app.getLabels(
+    'unknownError',
+    'submit',
+    'yourPassword',
+    'keepLogged',
+    'forgotPasswordTip'
+  );
+
   // Password ref
   const passwordRef = React.useRef<HTMLInputElement>();
   const mRef = React.createRef<TextFieldExMethods>();
@@ -100,7 +109,7 @@ function Password(props: RouteComponentProps<{ username: string }>) {
         const refreshToken = app.getResponseToken(payload.response);
 
         if (refreshToken == null || result.data == null) {
-          app.notifier.alert(app.get('unknownError')!);
+          app.notifier.alert(labels.unknownError);
           return;
         }
 
@@ -133,7 +142,7 @@ function Password(props: RouteComponentProps<{ username: string }>) {
       title={id}
       buttons={
         <Button variant="contained" onClick={submit} disabled={buttonDisabled}>
-          {app.get('submit')}
+          {labels.submit}
         </Button>
       }
       {...props}
@@ -145,7 +154,7 @@ function Password(props: RouteComponentProps<{ username: string }>) {
         </Box>
         <TextFieldEx
           name="password"
-          label={app.get('yourPassword')}
+          label={labels.yourPassword}
           showPassword={true}
           autoComplete="current-password"
           inputRef={passwordRef}
@@ -164,11 +173,11 @@ function Password(props: RouteComponentProps<{ username: string }>) {
             onChange={(e) => updateKeep(e.target.checked)}
           />
         }
-        label={app.get('keepLogged')}
+        label={labels.keepLogged}
       />
       <div>
         <Link href={app.transformUrl(`/login/callbackverify/${username}`)}>
-          {app.get('forgotPasswordTip')}
+          {labels.forgotPasswordTip}
         </Link>
       </div>
     </SharedLayout>

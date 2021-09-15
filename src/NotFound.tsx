@@ -13,6 +13,9 @@ export function NotFound(props: RouteComponentProps) {
   // App
   const app = SmartApp.instance;
 
+  // Labels
+  const labels = app.getLabels('pageNotFound', 'back');
+
   // Currently, navigate from props always failed with step number -1
   const goBack = () => {
     navigate(-1);
@@ -20,10 +23,10 @@ export function NotFound(props: RouteComponentProps) {
 
   return (
     <SharedLayout
-      title={app.get('pageNotFound')!}
+      title={labels.pageNotFound}
       buttons={
         <Button variant="contained" onClick={goBack}>
-          {app.get('back')}
+          {labels.back}
         </Button>
       }
       {...props}

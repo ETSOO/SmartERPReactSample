@@ -16,6 +16,9 @@ function RegisterComplete(props: RouteComponentProps<{ username?: string }>) {
   // App
   const app = SmartApp.instance;
 
+  // Labels
+  var labels = app.getLabels('completeRegistration', 'submit', 'yourname');
+
   // Name field
   const nameRef = React.useRef<HTMLInputElement>();
 
@@ -71,17 +74,17 @@ function RegisterComplete(props: RouteComponentProps<{ username?: string }>) {
 
   return (
     <SharedLayout
-      title={app.get('completeRegistration')!}
+      title={labels.completeRegistration}
       subTitle={<Typography variant="subtitle2">{id}</Typography>}
       buttons={[
         <Button variant="contained" key="next" onClick={submitClick}>
-          {app.get('submit')}
+          {labels.submit}
         </Button>
       ]}
       {...props}
     >
       <TextFieldEx
-        label={app.get('yourname')}
+        label={labels.yourname}
         inputRef={nameRef}
         autoFocus
         autoCorrect="off"

@@ -87,6 +87,14 @@ export function HomeLayout() {
   // App
   const app = SmartApp.instance;
 
+  // Labels
+  const labels = app.getLabels(
+    'smartERP',
+    'hideMenu',
+    'menuHome',
+    'menuLoginHistory'
+  );
+
   // Page context
   const PageContext = SmartApp.pageState.context;
 
@@ -151,9 +159,9 @@ export function HomeLayout() {
         >
           <DrawerHeader>
             <Typography variant="h6" noWrap component="div">
-              {app.get('smartERP')}
+              {labels.smartERP}
             </Typography>
-            <IconButton title={app.get('hideMenu')} onClick={handleDrawerClose}>
+            <IconButton title={labels.hideMenu} onClick={handleDrawerClose}>
               <ChevronLeftIcon />
             </IconButton>
           </DrawerHeader>
@@ -163,13 +171,13 @@ export function HomeLayout() {
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
-              <ListItemText primary={app.get('menuHome')} />
+              <ListItemText primary={labels.menuHome} />
             </ListItem>
             <ListItem button component={Link} to="/home/user/loginhistory">
               <ListItemIcon>
                 <HistoryIcon />
               </ListItemIcon>
-              <ListItemText primary={app.get('menuLoginHistory')} />
+              <ListItemText primary={labels.menuLoginHistory} />
             </ListItem>
           </List>
         </Drawer>

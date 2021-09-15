@@ -9,9 +9,6 @@ import { Helper } from '../../app/Helper';
 import { SmartApp } from '../../app/SmartApp';
 import Yup from '../../app/YupHelper';
 
-// App
-const app = SmartApp.instance;
-
 /**
  * Validate password
  * errorMessage is one parameter, add any parameters you need
@@ -32,25 +29,41 @@ Yup.addMethod<Yup.StringSchema>(
   }
 );
 
-// Form validation schema
-const validationSchema = Yup.object({
-  oldPassword: Yup.string().required(
-    app.get<string>('currentPasswordRequired')
-  ),
-  password: Yup.string()
-    .validatePassword(app.get<string>('passwordTip'))
-    .required(app.get<string>('newPasswordRequired'))
-    .notOneOf([Yup.ref('oldPassword')], app.get<string>('newPasswordTip')),
-  rePassword: Yup.string()
-    .required(app.get<string>('repeatPasswordRequired'))
-    // oneOf([Yup.ref('newPassword'), null], "Passwords mush match") will fail
-    // ref is not proper for reach validation, ref field value is not ready
-    .oneOf([Yup.ref('password')], app.get<string>('passwordRepeatError'))
-});
-
 // Change password
 // https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#autofill
 function ChangePassword(_props: RouteComponentProps) {
+  // App
+  const app = SmartApp.instance;
+
+  // Labels
+  const labels = app.getLabels(
+    'currentPasswordRequired',
+    'passwordTip',
+    'newPasswordRequired',
+    'newPasswordTip',
+    'repeatPasswordRequired',
+    'passwordRepeatError',
+    'passwordChangeSuccess',
+    'currentPassword',
+    'newPassword',
+    'repeatPassword',
+    'submit'
+  );
+
+  // Form validation schema
+  const validationSchema = Yup.object({
+    oldPassword: Yup.string().required(labels.currentPasswordRequired),
+    password: Yup.string()
+      .validatePassword(labels.passwordTip)
+      .required(labels.newPasswordRequired)
+      .notOneOf([Yup.ref('oldPassword')], labels.newPasswordTip),
+    rePassword: Yup.string()
+      .required(labels.repeatPasswordRequired)
+      // oneOf([Yup.ref('newPassword'), null], "Passwords mush match") will fail
+      // ref is not proper for reach validation, ref field value is not ready
+      .oneOf([Yup.ref('password')], labels.passwordRepeatError)
+  });
+
   // Formik
   const formik = useFormik({
     initialValues: {
@@ -74,28 +87,24 @@ function ChangePassword(_props: RouteComponentProps) {
 
       if (result.success) {
         // Tip and clear
-        app.notifier.succeed(
-          app.get('passwordChangeSuccess')!,
-          undefined,
-          () => {
-            // Sign out
-            app.api
-              .put<boolean>('User/Signout', undefined, {
-                onError: (error) => {
-                  console.log(error);
-                  // Prevent further processing
-                  return false;
-                }
-              })
-              .then((_result) => {
-                // Clear
-                app.userLogout();
+        app.notifier.succeed(labels.passwordChangeSuccess, undefined, () => {
+          // Sign out
+          app.api
+            .put<boolean>('User/Signout', undefined, {
+              onError: (error) => {
+                console.log(error);
+                // Prevent further processing
+                return false;
+              }
+            })
+            .then((_result) => {
+              // Clear
+              app.userLogout();
 
-                // Go to login page
-                app.toLoginPage();
-              });
-          }
-        );
+              // Go to login page
+              app.toLoginPage();
+            });
+        });
       } else {
         formik.setFieldError('oldPassword', result.title);
         DomUtils.setFocus('oldPassword');
@@ -105,8 +114,8 @@ function ChangePassword(_props: RouteComponentProps) {
 
   React.useEffect(() => {
     // Page title
-    app.setPageTitle(app.get('changePassword')!);
-  }, []);
+    app.setPageKey('changePassword');
+  }, [app]);
 
   return (
     <CommonPage maxWidth="xs">
@@ -119,7 +128,7 @@ function ChangePassword(_props: RouteComponentProps) {
         <VBox spacing={2}>
           <TextFieldEx
             name="oldPassword"
-            label={app.get('currentPassword')}
+            label={labels.currentPassword}
             showPassword={true}
             autoFocus
             value={formik.values.oldPassword}
@@ -131,7 +140,7 @@ function ChangePassword(_props: RouteComponentProps) {
           />
           <TextFieldEx
             name="password"
-            label={app.get('newPassword')}
+            label={labels.newPassword}
             showPassword={true}
             autoComplete="new-password"
             value={formik.values.password}
@@ -141,7 +150,7 @@ function ChangePassword(_props: RouteComponentProps) {
           />
           <TextFieldEx
             name="rePassword"
-            label={app.get('repeatPassword')}
+            label={labels.repeatPassword}
             showPassword={true}
             value={formik.values.rePassword}
             onChange={formik.handleChange}
@@ -151,7 +160,7 @@ function ChangePassword(_props: RouteComponentProps) {
             helperText={formik.touched.rePassword && formik.errors.rePassword}
           />
           <Button variant="contained" type="submit" fullWidth>
-            {app.get('submit')}
+            {labels.submit}
           </Button>
         </VBox>
       </form>

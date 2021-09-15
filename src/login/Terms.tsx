@@ -8,12 +8,15 @@ function Terms(props: RouteComponentProps) {
   // App
   const app = SmartApp.instance;
 
+  // Labels
+  const labels = app.getLabels('terms', 'back');
+
   return (
     <SharedLayout
-      title={app.get('terms')!}
+      title={labels.terms}
       buttons={
         <Button variant="contained" component={Link} to={app.transformUrl('/')}>
-          {app.get('back')}
+          {labels.back}
         </Button>
       }
       {...props}
