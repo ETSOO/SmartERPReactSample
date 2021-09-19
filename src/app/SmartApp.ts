@@ -276,6 +276,9 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
    * Try login
    */
   override tryLogin() {
+    // Reset user state
+    super.tryLogin();
+
     // Data
     const { data, payload } = this.createRefreshData();
 
@@ -296,10 +299,14 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
           if (!this.doSuccess(result, payload)) {
             this.toLoginPage();
           }
-        } else if (result.type === 'TokenExpired') {
+          return;
+        }
+
+        if (result.type === 'TokenExpired') {
           // Dialog to receive password
+          var labels = this.getLabels('reloginTip', 'login');
           this.notifier.prompt(
-            this.get('reloginTip')!,
+            labels.reloginTip,
             (pwd) => {
               // Set password for the action
               data.pwd = pwd;
@@ -314,12 +321,13 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
                   }
                 });
             },
-            this.get('login'),
+            labels.login,
             { type: 'password' }
           );
-        } else {
-          this.toLoginPage();
+          return;
         }
+
+        this.toLoginPage();
       });
   }
 }

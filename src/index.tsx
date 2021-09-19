@@ -50,7 +50,20 @@ const UserStateProvider = app.userState.provider;
 const PageStateProvider = SmartApp.pageState.provider;
 
 // Theme
-const theme = createTheme({});
+const theme = createTheme({
+  components: {
+    MuiFormLabel: {
+      styleOverrides: {
+        asterisk: {
+          color: '#db3131',
+          '&$error': {
+            color: '#ff0000'
+          }
+        }
+      }
+    }
+  }
+});
 
 ReactDOM.render(
   <ThemeProvider theme={theme}>
