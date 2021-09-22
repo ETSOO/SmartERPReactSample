@@ -97,7 +97,7 @@ function Password(props: RouteComponentProps<{ username: string }>) {
       id,
       pwd: password,
       country: app.settings.currentCountry.id,
-      timezone: app.settings.timeZone ?? app.ipData?.timezone
+      timezone: app.getTimeZone()
     };
 
     const payload: IApiPayload<LoginResult, any> = {};

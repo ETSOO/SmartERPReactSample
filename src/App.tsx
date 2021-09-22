@@ -135,7 +135,7 @@ function App(props: RouteComponentProps) {
     // Reqest data
     const data: RefreshTokenRQ = {
       country: countryId,
-      timezone: app.settings.timeZone ?? app.ipData?.timezone
+      timezone: app.getTimeZone()
     };
 
     // Payload

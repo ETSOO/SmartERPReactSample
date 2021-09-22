@@ -59,7 +59,7 @@ function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
       Object.assign(data, {
         email: id,
         action: 4,
-        timezone: app.settings.timeZone ?? app.ipData?.timezone
+        timezone: app.getTimeZone()
       });
     }
 

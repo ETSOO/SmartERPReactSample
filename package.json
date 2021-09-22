@@ -1,14 +1,14 @@
 {
   "name": "smarterpsample",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "homepage": ".",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.4.1",
     "@emotion/style": "^0.8.0",
     "@emotion/styled": "^11.3.0",
-    "@etsoo/appscript": "^1.0.86",
-    "@etsoo/react": "^1.1.86",
+    "@etsoo/appscript": "^1.0.88",
+    "@etsoo/react": "^1.1.88",
     "@etsoo/restclient": "^1.0.51",
     "@etsoo/shared": "^1.0.41",
     "@mui/icons-material": "^5.0.0-rc.0",
