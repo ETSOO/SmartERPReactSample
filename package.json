@@ -1,6 +1,6 @@
 {
   "name": "smarterpsample",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "homepage": ".",
   "private": true,
   "dependencies": {
@@ -8,11 +8,11 @@
     "@emotion/style": "^0.8.0",
     "@emotion/styled": "^11.3.0",
     "@etsoo/appscript": "^1.0.88",
-    "@etsoo/react": "^1.1.88",
+    "@etsoo/react": "^1.1.89",
     "@etsoo/restclient": "^1.0.51",
     "@etsoo/shared": "^1.0.41",
-    "@mui/icons-material": "^5.0.0-rc.0",
-    "@mui/material": "^5.0.0-rc.0",
+    "@mui/icons-material": "^5.0.0",
+    "@mui/material": "^5.0.0",
     "@reach/router": "^1.3.4",
     "@types/node": "^16.9.1",
     "@types/reach__router": "^1.3.9",
