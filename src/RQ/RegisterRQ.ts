@@ -23,7 +23,7 @@ export type RegisterRQ = {
   name: string;
 
   /**
-   * Country
+   * Country or region
    */
-  country: string;
+  region: string;
 };

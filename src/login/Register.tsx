@@ -5,6 +5,7 @@ import { Link, RouteComponentProps } from '@reach/router';
 import { SmartApp } from '../app/SmartApp';
 import { SharedLayout } from './SharedLayout';
 import { IActionResult } from '@etsoo/appscript';
+import { LoginIdRQ } from '../RQ/LoginIdRQ';
 
 function Register(props: RouteComponentProps<{ '*': string }>) {
   // App
@@ -39,9 +40,9 @@ function Register(props: RouteComponentProps<{ '*': string }>) {
     }
 
     // Get the result
-    const data = {
+    const data: LoginIdRQ = {
       id,
-      country: app.settings.currentCountry.id
+      region: app.settings.currentRegion.id
     };
 
     const result = await app.api.get<IActionResult>('Auth/LoginId', data);

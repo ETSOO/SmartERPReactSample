@@ -1,4 +1,4 @@
-import { IExternalSettingsHost } from '@etsoo/appscript';
+import { AddressRegion, IExternalSettingsHost } from '@etsoo/appscript';
 import {
   ApiAuthorizationScheme,
   createClient,
@@ -23,6 +23,7 @@ import React from 'react';
 import { RefreshTokenRQ } from '../RQ/RefreshTokenRQ';
 import { LoginResult } from '../models/LoginResult';
 import { Constants } from './Constants';
+import { ISmartPageData } from './SmartPageData';
 
 // Supported cultures
 const supportedCultures: DataTypes.CultureDefinition[] = [
@@ -30,31 +31,10 @@ const supportedCultures: DataTypes.CultureDefinition[] = [
   { name: 'en-US', label: 'English', resources: enUSResources }
 ];
 
-// Supported countries
-const supportedCountries: DataTypes.Country[] = [
-  {
-    id: 'CN',
-    id3: 'CHN',
-    nid: '156',
-    continent: 'AS',
-    exitCode: '00',
-    idd: '86',
-    currency: 'CNY',
-    language: 'zh-CN'
-  },
-  {
-    id: 'NZ',
-    id3: 'NZL',
-    nid: '554',
-    continent: 'OC',
-    exitCode: '00',
-    idd: '64',
-    currency: 'NZD',
-    language: 'en-NZ'
-  }
-];
+// Supported regions
+const supportedRegions = ['CN', 'NZ'];
 
-// Detected country
+// Detected country or region
 const { detectedCountry } = DomUtils;
 
 // Detected culture
@@ -66,7 +46,11 @@ MUGlobal.textFieldVariant = 'standard';
 /**
  * SmartERP App
  */
-export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
+export class SmartApp extends ReactApp<
+  ISmartSettings,
+  ISmartUser,
+  ISmartPageData
+> {
   private static _instance: SmartApp;
 
   /**
@@ -93,7 +77,7 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
     return SmartApp._cultureState;
   }
 
-  private static _pageState: PageState;
+  private static _pageState: PageState<ISmartPageData>;
   /**
    * Page state
    */
@@ -116,17 +100,17 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
       // Detected culture
       detectedCulture,
 
-      // Supported countries
-      countries: supportedCountries,
-
       // Supported cultures
       cultures: supportedCultures,
+
+      // Supported regions
+      regions: supportedRegions,
 
       // Browser's time zone
       timeZone: Utils.getTimeZone(),
 
-      // Current country
-      currentCountry: {} as DataTypes.Country,
+      // Current country or region
+      currentRegion: {} as AddressRegion,
 
       // Current culture
       currentCulture: {} as DataTypes.CultureDefinition
@@ -150,11 +134,8 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
     // Static reference
     SmartApp._instance = app;
 
-    // Default country
-    const defaultCountry =
-      supportedCountries.find((c) => c.id === detectedCountry) ??
-      supportedCountries[0];
-    app.changeCountry(defaultCountry);
+    // Default country or region
+    app.changeRegion(app.getRegion(detectedCountry, detectedCulture));
 
     // Set default language
     app.changeCulture(DomUtils.getCulture(supportedCultures, detectedCulture)!);
@@ -230,7 +211,7 @@ export class SmartApp extends ReactApp<ISmartSettings, ISmartUser> {
 
     // Reqest data
     const data: RefreshTokenRQ = {
-      country: this.settings.currentCountry.id,
+      region: this.settings.currentRegion.id,
       timezone: this.settings.timeZone ?? this.ipData?.timezone
     };
 

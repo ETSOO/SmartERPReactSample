@@ -8,7 +8,7 @@ export type LoginIdRQ = {
   id: string;
 
   /**
-   * Country
+   * Country or region
    */
-  country: string;
+  region: string;
 };

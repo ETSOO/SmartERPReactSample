@@ -28,9 +28,9 @@ export type LoginHistoryDto = {
   language: string;
 
   /**
-   * Country
+   * Country or region
    */
-  country: string;
+  region: string;
 
   /**
    * Time zone

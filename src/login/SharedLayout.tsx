@@ -116,7 +116,11 @@ export function SharedLayout(props: SharedLayoutProps) {
             <Typography variant="h5">{title}</Typography>
             {pageRight}
           </HBox>
-          {subTitle}
+          {subTitle && (
+            <Typography color={(theme) => theme.palette.grey[600]}>
+              {subTitle}
+            </Typography>
+          )}
         </VBox>
         {children}
         <HBox

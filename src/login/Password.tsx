@@ -96,7 +96,7 @@ function Password(props: RouteComponentProps<{ username: string }>) {
     const data: LoginRQ = {
       id,
       pwd: password,
-      country: app.settings.currentCountry.id,
+      region: app.settings.currentRegion.id,
       timezone: app.getTimeZone()
     };
 

@@ -15,7 +15,7 @@ export type ResetPasswordRQ = {
   password: string;
 
   /**
-   * Country
+   * Country or region
    */
-  country: string;
+  region: string;
 };

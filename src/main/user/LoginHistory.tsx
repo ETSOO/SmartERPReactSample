@@ -211,7 +211,7 @@ function LoginHistory(props: RouteComponentProps) {
                 </Typography>
 
                 <Typography variant="caption" noWrap>
-                  {[data.country, data.language, data.timezone].join(', ')}
+                  {[data.region, data.language, data.timezone].join(', ')}
                 </Typography>
 
                 <Typography

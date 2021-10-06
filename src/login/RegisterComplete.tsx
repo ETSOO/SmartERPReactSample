@@ -54,7 +54,7 @@ function RegisterComplete(props: RouteComponentProps<{ username?: string }>) {
       codeId,
       password,
       name,
-      country: app.settings.currentCountry.id
+      region: app.settings.currentRegion.id
     };
 
     const result = await app.api.post<IActionResult>('Auth/Register', data);

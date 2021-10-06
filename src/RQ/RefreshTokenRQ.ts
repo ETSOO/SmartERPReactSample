@@ -8,9 +8,9 @@ export type RefreshTokenRQ = {
   pwd?: string;
 
   /**
-   * Country
+   * Country or region
    */
-  country: string;
+  region: string;
 
   /**
    * Time zone

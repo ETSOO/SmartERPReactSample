@@ -8,7 +8,7 @@ import { SharedLayout } from './login/SharedLayout';
 import { AccountCircle, Language } from '@mui/icons-material';
 
 import './App.css';
-import { IActionResult } from '@etsoo/appscript';
+import { AddressRegion, IActionResult } from '@etsoo/appscript';
 import { Constants } from './app/Constants';
 import { IApiPayload } from '@etsoo/restclient';
 import { LoginIdRQ } from './RQ/LoginIdRQ';
@@ -34,20 +34,18 @@ function App(props: RouteComponentProps) {
   // App
   const app = SmartApp.instance;
 
-  // Country
-  const [countryId, updateCountryId] = React.useState(
-    app.settings.currentCountry.id
+  // Country or region
+  const [regionId, updateRegionId] = React.useState(
+    app.settings.currentRegion.id
   );
 
   // Try to detect IP
-  if (countryId == null) {
+  if (regionId == null) {
     app.detectIP(() => {
-      const newCountryId =
-        app.ipData == null
-          ? app.settings.countries[0].id
-          : app.ipData.countryCode;
-      app.changeCountryId(newCountryId);
-      updateCountryId(newCountryId);
+      const newRegionId =
+        app.ipData == null ? app.settings.regions[0] : app.ipData.countryCode;
+      app.changeRegion(newRegionId);
+      updateRegionId(newRegionId);
     });
   }
 
@@ -57,10 +55,10 @@ function App(props: RouteComponentProps) {
   // Culture dispatch
   const { dispatch } = React.useContext(Context);
 
-  // Change country
-  const closeCountryChoose = (item: DataTypes.Country) => {
+  // Change country or region
+  const closeRegionChoose = (item: AddressRegion) => {
     if (item != null) {
-      app.changeCountry(item);
+      app.changeRegion(item.id);
     }
   };
 
@@ -87,7 +85,7 @@ function App(props: RouteComponentProps) {
     // Get the result
     const data: LoginIdRQ = {
       id,
-      country: countryId
+      region: regionId
     };
 
     const result = await app.api.get<IActionResult>('Auth/LoginId', data);
@@ -134,7 +132,7 @@ function App(props: RouteComponentProps) {
 
     // Reqest data
     const data: RefreshTokenRQ = {
-      country: countryId,
+      region: regionId,
       timezone: app.getTimeZone()
     };
 
@@ -165,7 +163,7 @@ function App(props: RouteComponentProps) {
         // Navigate to service
         navigate!(app.transformUrl('/home'));
       });
-  }, [countryId, trySaveLogin, refreshToken, navigate, app]);
+  }, [regionId, trySaveLogin, refreshToken, navigate, app]);
 
   return (
     <Context.Consumer>
@@ -174,14 +172,14 @@ function App(props: RouteComponentProps) {
           visible={visible}
           pageRight={
             <HBox width={200} spacing={0.5} justifyContent="flex-end">
-              {countryId && (
+              {regionId && (
                 <ItemList
-                  items={app.settings.countries}
+                  items={app.getRegions()}
                   labelField="name"
                   size="small"
-                  title={value.get('country')}
-                  onClose={closeCountryChoose}
-                  selectedValue={countryId}
+                  title={value.get('region')}
+                  onClose={closeRegionChoose}
+                  selectedValue={regionId}
                   className="noneTransformButton"
                 />
               )}
