@@ -42,7 +42,7 @@ function Register(props: RouteComponentProps<{ '*': string }>) {
     // Get the result
     const data: LoginIdRQ = {
       id,
-      region: app.settings.currentRegion.id
+      region: app.region
     };
 
     const result = await app.api.get<IActionResult>('Auth/LoginId', data);

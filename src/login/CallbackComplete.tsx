@@ -87,7 +87,7 @@ function CallbackComplete(props: RouteComponentProps<{ username: string }>) {
       id,
       codeId,
       password: repeat.value,
-      region: app.settings.currentRegion.id
+      region: app.region
     };
 
     const result = await app.api.put<IActionResult>('Auth/ResetPassword', data);

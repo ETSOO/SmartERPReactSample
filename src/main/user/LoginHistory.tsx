@@ -67,6 +67,8 @@ function LoginHistory(props: RouteComponentProps) {
 
   const margin = MUGlobal.pagePaddings;
 
+  console.log(app.region, app.culture);
+
   React.useEffect(() => {
     // Page title
     app.setPageKey('menuLoginHistory');
@@ -142,7 +144,8 @@ function LoginHistory(props: RouteComponentProps) {
             width: 164,
             header: labels.creation,
             sortable: true,
-            sortAsc: false
+            sortAsc: false,
+            renderProps: app.getDateFormatProps()
           },
           { field: 'deviceName', header: labels.device },
           {

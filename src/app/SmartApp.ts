@@ -1,4 +1,4 @@
-import { AddressRegion, IExternalSettingsHost } from '@etsoo/appscript';
+import { AddressUtils, IExternalSettingsHost } from '@etsoo/appscript';
 import {
   ApiAuthorizationScheme,
   createClient,
@@ -32,7 +32,7 @@ const supportedCultures: DataTypes.CultureDefinition[] = [
 ];
 
 // Supported regions
-const supportedRegions = ['CN', 'NZ'];
+const supportedRegions = ['CN', 'US'];
 
 // Detected country or region
 const { detectedCountry } = DomUtils;
@@ -89,6 +89,19 @@ export class SmartApp extends ReactApp<
    * Setup
    */
   static setup() {
+    // Culture
+    const currentCulture = DomUtils.getCulture(
+      supportedCultures,
+      detectedCulture
+    )!;
+
+    // Current country or region
+    const currentRegion = AddressUtils.getRegion(
+      supportedRegions,
+      detectedCountry,
+      currentCulture.name
+    );
+
     // Settings
     const settings: ISmartSettings = {
       // Merge external configs first
@@ -110,10 +123,10 @@ export class SmartApp extends ReactApp<
       timeZone: Utils.getTimeZone(),
 
       // Current country or region
-      currentRegion: {} as AddressRegion,
+      currentRegion,
 
       // Current culture
-      currentCulture: {} as DataTypes.CultureDefinition
+      currentCulture
     };
 
     // Notifier
@@ -133,12 +146,6 @@ export class SmartApp extends ReactApp<
 
     // Static reference
     SmartApp._instance = app;
-
-    // Default country or region
-    app.changeRegion(app.getRegion(detectedCountry, detectedCulture));
-
-    // Set default language
-    app.changeCulture(DomUtils.getCulture(supportedCultures, detectedCulture)!);
 
     // Auto start to detect IP data
     app.detectIP();
@@ -211,7 +218,7 @@ export class SmartApp extends ReactApp<
 
     // Reqest data
     const data: RefreshTokenRQ = {
-      region: this.settings.currentRegion.id,
+      region: this.region!,
       timezone: this.settings.timeZone ?? this.ipData?.timezone
     };
 

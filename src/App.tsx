@@ -35,9 +35,7 @@ function App(props: RouteComponentProps) {
   const app = SmartApp.instance;
 
   // Country or region
-  const [regionId, updateRegionId] = React.useState(
-    app.settings.currentRegion.id
-  );
+  const [regionId, updateRegionId] = React.useState(app.region);
 
   // Try to detect IP
   if (regionId == null) {
@@ -189,7 +187,7 @@ function App(props: RouteComponentProps) {
                 size="small"
                 title={value.get('languages')}
                 onClose={closeCultureChoose}
-                selectedValue={app.settings.currentCulture.name}
+                selectedValue={app.culture}
                 className="noneTransformButton"
                 icon={<Language />}
               />

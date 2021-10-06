@@ -59,7 +59,6 @@ function Password(props: RouteComponentProps<{ username: string }>) {
       case 'UserFrozen':
       case 'DeviceFrozen':
         const frozenTime = new Date(result.data?.frozenTime);
-        console.log(frozenTime, app.culture);
         title = title.replace('{0}', frozenTime.toLocaleString(app.culture));
         disabled = true;
         break;
@@ -96,7 +95,7 @@ function Password(props: RouteComponentProps<{ username: string }>) {
     const data: LoginRQ = {
       id,
       pwd: password,
-      region: app.settings.currentRegion.id,
+      region: app.region,
       timezone: app.getTimeZone()
     };
 

@@ -44,7 +44,7 @@ function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
   // Resending
   const resending = async () => {
     const data = {
-      region: app.settings.currentRegion.id
+      region: app.region
     };
 
     let api: string;
