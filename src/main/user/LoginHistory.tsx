@@ -67,8 +67,6 @@ function LoginHistory(props: RouteComponentProps) {
 
   const margin = MUGlobal.pagePaddings;
 
-  console.log(app.region, app.culture);
-
   React.useEffect(() => {
     // Page title
     app.setPageKey('menuLoginHistory');
@@ -238,7 +236,8 @@ function LoginHistory(props: RouteComponentProps) {
                     content={JSON.stringify(data, undefined, 2)}
                     contentPre
                     disableScrollLock
-                    maxWidth="xs"
+                    maxWidth="sm"
+                    fullWidth
                     size="small"
                   >
                     JSON data
