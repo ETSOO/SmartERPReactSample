@@ -79,7 +79,7 @@ function LoginHistory(props: RouteComponentProps) {
         defaultOrderBy="creation"
         pageProps={{ onRefresh: reloadData }}
         fields={[
-          <Tiplist<IdLabelDto>
+          <Tiplist
             label={labels.device}
             name="deviceId"
             search
@@ -94,7 +94,7 @@ function LoginHistory(props: RouteComponentProps) {
               );
             }}
           />,
-          <SelectEx<IdLabelDto>
+          <SelectEx
             label={labels.successLogin}
             name="success"
             search

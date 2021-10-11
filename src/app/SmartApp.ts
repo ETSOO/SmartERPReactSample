@@ -265,7 +265,8 @@ export class SmartApp extends ReactApp<
    */
   override tryLogin() {
     // Reset user state
-    super.tryLogin();
+    const result = super.tryLogin();
+    if (!result) return false;
 
     // Data
     const { data, payload } = this.createRefreshData();
@@ -273,7 +274,7 @@ export class SmartApp extends ReactApp<
     // Check
     if (data == null || payload == null) {
       this.toLoginPage();
-      return;
+      return false;
     }
 
     // Call API
@@ -317,5 +318,7 @@ export class SmartApp extends ReactApp<
 
         this.toLoginPage();
       });
+
+    return true;
   }
 }
