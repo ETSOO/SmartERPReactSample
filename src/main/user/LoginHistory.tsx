@@ -78,6 +78,7 @@ function LoginHistory(props: RouteComponentProps) {
         mRef={ref}
         defaultOrderBy="creation"
         pageProps={{ onRefresh: reloadData }}
+        fieldTemplate={{ deviceId: 'number', success: 'boolean' }}
         fields={[
           <Tiplist
             label={labels.device}
@@ -126,9 +127,7 @@ function LoginHistory(props: RouteComponentProps) {
           />
         ]}
         loadData={async (data) => {
-          // Format data
-          data.success = data.success == null ? null : data.success === 'true';
-
+          console.log(data);
           return await app.api.post<LoginHistoryDto[]>(
             'User/LoginHistory',
             data,

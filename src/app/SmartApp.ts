@@ -102,6 +102,8 @@ export class SmartApp extends ReactApp<
       currentCulture.name
     );
 
+    console.log(currentCulture, currentRegion);
+
     // Settings
     const settings: ISmartSettings = {
       // Merge external configs first
