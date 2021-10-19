@@ -16,6 +16,7 @@ import {
   NotificationRenderProps,
   NotifierMU,
   PageState,
+  ProgressCount,
   ReactApp
 } from '@etsoo/react';
 import { ISmartUser } from './SmartUser';
@@ -102,8 +103,6 @@ export class SmartApp extends ReactApp<
       currentCulture.name
     );
 
-    console.log(currentCulture, currentRegion);
-
     // Settings
     const settings: ISmartSettings = {
       // Merge external configs first
@@ -184,9 +183,42 @@ export class SmartApp extends ReactApp<
   }
 
   /**
+   * Fresh countdown UI
+   * @param callback Callback
+   */
+  freshCountdownUI(_callback: () => void) {
+    // Labels
+    const labels = this.getLabels('cancel', 'tokenExpiry');
+
+    // Progress
+    const progress = React.createElement(ProgressCount, {
+      seconds: 30,
+      valueUnit: 's',
+      onComplete: () => {
+        // Stop the progress
+        return false;
+      }
+    });
+
+    // Popup
+    this.notifier.alert(
+      labels.tokenExpiry,
+      () => {
+        this.tryLogin();
+        //callback();
+      },
+      {
+        okLabel: labels.cancel,
+        primaryButton: { fullWidth: true, autoFocus: false },
+        inputs: progress
+      }
+    );
+  }
+
+  /**
    * Refresh token
    */
-  async refreshToken() {
+  override async refreshToken() {
     // Data
     const { data, payload } = this.createRefreshData();
 
@@ -206,6 +238,8 @@ export class SmartApp extends ReactApp<
       // Auto success
       this.doSuccess(result, payload);
     }
+
+    return true;
   }
 
   private createRefreshData = () => {
@@ -226,6 +260,8 @@ export class SmartApp extends ReactApp<
 
     // Payload
     const payload: IApiPayload<LoginResult, any> = {
+      // No loading bar needed to avoid screen flicks
+      showLoading: false,
       config: { headers: { [fieldName]: refreshToken } }
     };
 
@@ -256,18 +292,37 @@ export class SmartApp extends ReactApp<
   };
 
   /**
+   * Signout
+   */
+  async signout() {
+    await this.api.put<boolean>('User/Signout', undefined, {
+      onError: (error) => {
+        console.log(error);
+        // Prevent further processing
+        return false;
+      }
+    });
+
+    // Clear
+    this.userLogout();
+
+    // Go to login page
+    this.toLoginPage();
+  }
+
+  /**
    * Go to the login page
    */
   toLoginPage() {
-    window.location.href = this.transformUrl('/');
+    window.location.replace(this.transformUrl('/'));
   }
 
   /**
    * Try login
    */
-  override tryLogin() {
+  override async tryLogin() {
     // Reset user state
-    const result = super.tryLogin();
+    const result = await super.tryLogin();
     if (!result) return false;
 
     // Data
@@ -280,47 +335,52 @@ export class SmartApp extends ReactApp<
     }
 
     // Call API
-    this.api
-      .put<LoginResult>('Auth/RefreshToken', data, payload)
-      .then((result) => {
-        if (result == null) return;
+    const loginResult = await this.api.put<LoginResult>(
+      'Auth/RefreshToken',
+      data,
+      payload
+    );
 
-        if (result.success) {
-          // Auto success
-          if (!this.doSuccess(result, payload)) {
-            this.toLoginPage();
-          }
-          return;
-        }
+    if (loginResult == null) return false;
 
-        if (result.type === 'TokenExpired') {
-          // Dialog to receive password
-          var labels = this.getLabels('reloginTip', 'login');
-          this.notifier.prompt(
-            labels.reloginTip,
-            (pwd) => {
-              // Set password for the action
-              data.pwd = pwd;
-
-              // Submit again
-              this.api
-                .put<LoginResult>('Auth/RefreshToken', data, payload)
-                .then((result) => {
-                  if (result != null && result.success) {
-                    // Manual success
-                    this.doSuccess(result, payload);
-                  }
-                });
-            },
-            labels.login,
-            { type: 'password' }
-          );
-          return;
-        }
-
+    if (loginResult.success) {
+      // Auto success
+      if (!this.doSuccess(loginResult, payload)) {
         this.toLoginPage();
-      });
+        return false;
+      }
+      return true;
+    }
 
-    return true;
+    if (loginResult.type === 'TokenExpired') {
+      // Dialog to receive password
+      var labels = this.getLabels('reloginTip', 'login');
+      this.notifier.prompt(
+        labels.reloginTip,
+        async (pwd) => {
+          // Set password for the action
+          data.pwd = pwd;
+
+          // Submit again
+          const result = await this.api.put<LoginResult>(
+            'Auth/RefreshToken',
+            data,
+            payload
+          );
+
+          if (result != null && result.success) {
+            // Manual success
+            this.doSuccess(result, payload);
+          }
+        },
+        labels.login,
+        { type: 'password' }
+      );
+      return false;
+    }
+
+    this.toLoginPage();
+
+    return false;
   }
 }

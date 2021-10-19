@@ -42,21 +42,7 @@ export function UserMenu() {
     setAnchorEl(undefined);
 
     // Sign out
-    app.api
-      .put<boolean>('User/Signout', undefined, {
-        onError: (error) => {
-          console.log(error);
-          // Prevent further processing
-          return false;
-        }
-      })
-      .then((_result) => {
-        // Clear
-        app.userLogout();
-
-        // Go to login page
-        app.toLoginPage();
-      });
+    app.signout();
   };
 
   return (

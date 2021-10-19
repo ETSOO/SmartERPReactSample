@@ -127,7 +127,6 @@ function LoginHistory(props: RouteComponentProps) {
           />
         ]}
         loadData={async (data) => {
-          console.log(data);
           return await app.api.post<LoginHistoryDto[]>(
             'User/LoginHistory',
             data,

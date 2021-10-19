@@ -85,6 +85,7 @@
     "Users always have complete rights and interests in the data they collect, but do not have rights and interests in all operating equipment, software codes, data storage, intellectual property rights, and operating brands.",
     "The user can export the data supported by the system at any time during the payment period. After the payment is stopped, the data will be sealed and deleted at any time after 1 year. There is a charge for re-accessing the data before deleting it."
   ],
+  "tokenExpiry": "Your session is about to expire. Click the Cancel button to continue",
   "yes": "Yes",
   "yourname": "Your full name",
   "yourPassword": "Your password",

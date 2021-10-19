@@ -115,7 +115,9 @@ function App(props: RouteComponentProps) {
 
   // Save login
   const trySaveLogin =
-    (id === '' || id === userIdSaved) && refreshToken != null;
+    search.get('tryLogin') !== 'false' &&
+    (id === '' || id === userIdSaved) &&
+    refreshToken != null;
 
   // Visible
   const [visible, setVisible] = React.useState(!trySaveLogin);
