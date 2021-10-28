@@ -89,7 +89,7 @@ function App(props: RouteComponentProps) {
     const result = await app.api.get<IActionResult>('Auth/LoginId', data);
     if (result == null) return;
 
-    if (!result.success) {
+    if (!result.ok) {
       mRef.current?.setError(result.title);
       loginRef.current?.focus();
 
@@ -145,7 +145,7 @@ function App(props: RouteComponentProps) {
     app.api
       .put<LoginResult>('Auth/RefreshToken', data, payload)
       .then((result) => {
-        if (result == null || !result.success) {
+        if (result == null || !result.ok) {
           setVisible(true);
           return;
         }

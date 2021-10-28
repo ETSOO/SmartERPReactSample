@@ -93,7 +93,7 @@ function CallbackComplete(props: RouteComponentProps<{ username: string }>) {
     const result = await app.api.put<IActionResult>('Auth/ResetPassword', data);
     if (result == null) return;
 
-    if (result.success) {
+    if (result.ok) {
       // Clear the code
       StorageUtils.setSessionData(Constants.CodeFieldCallback, undefined);
 

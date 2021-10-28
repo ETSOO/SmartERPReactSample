@@ -85,7 +85,7 @@ function ChangePassword(_props: RouteComponentProps) {
       );
       if (result == null) return;
 
-      if (result.success) {
+      if (result.ok) {
         // Tip and clear
         app.notifier.succeed(labels.passwordChangeSuccess, undefined, () => {
           // Sign out

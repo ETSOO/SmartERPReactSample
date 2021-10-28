@@ -39,7 +39,7 @@ function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
   const id = decodeURIComponent(username);
 
   // Tip
-  const enterCodeTip = labels.enterCodeTip.replace('{0}', id);
+  const enterCodeTip = labels.enterCodeTip.format(id);
 
   // Resending
   const resending = async () => {
@@ -68,7 +68,7 @@ function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
     // Error, back to normal
     if (result == null) return 0;
 
-    if (!result.success) {
+    if (!result.ok) {
       // Popup
       app.alertResult(result);
       return 0;
@@ -106,7 +106,7 @@ function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
 
     if (result == null) return;
 
-    if (!result.success) {
+    if (!result.ok) {
       mRef.current?.setError(result.title);
       return 0;
     }

@@ -60,7 +60,7 @@ function RegisterComplete(props: RouteComponentProps<{ username?: string }>) {
     const result = await app.api.post<IActionResult>('Auth/Register', data);
     if (result == null) return;
 
-    if (result.success) {
+    if (result.ok) {
       // Clear the password
       StorageUtils.setSessionData(Constants.FieldRegisterPassword, undefined);
 

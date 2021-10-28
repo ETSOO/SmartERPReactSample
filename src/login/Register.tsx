@@ -48,7 +48,7 @@ function Register(props: RouteComponentProps<{ '*': string }>) {
     const result = await app.api.get<IActionResult>('Auth/LoginId', data);
 
     if (result != null) {
-      if (result.success) {
+      if (result.ok) {
         // Account registered
         app.notifier.confirm(labels.userFound, undefined, (value) => {
           if (value) {

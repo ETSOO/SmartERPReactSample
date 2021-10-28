@@ -203,8 +203,8 @@ export class SmartApp extends ReactApp<
     // Popup
     this.notifier.alert(
       labels.tokenExpiry,
-      () => {
-        this.tryLogin();
+      async () => {
+        await this.tryLogin();
         //callback();
       },
       {
@@ -234,7 +234,7 @@ export class SmartApp extends ReactApp<
 
     if (result == null) return false;
 
-    if (result.success) {
+    if (result.ok) {
       // Auto success
       this.doSuccess(result, payload);
     }
@@ -282,11 +282,8 @@ export class SmartApp extends ReactApp<
     // Keep
     const keep = StorageUtils.getLocalData(Constants.FieldLoginKeep, false);
 
-    // User data
-    const userData = result.data;
-
     // User login
-    this.userLogin(userData, newRefreshToken, keep);
+    this.userLogin(result.data, newRefreshToken, keep);
 
     return true;
   };
@@ -317,6 +314,12 @@ export class SmartApp extends ReactApp<
     window.location.replace(this.transformUrl('/'));
   }
 
+  private loginFailed() {
+    this.userUnauthorized();
+    this.toLoginPage();
+    return false;
+  }
+
   /**
    * Try login
    */
@@ -330,8 +333,7 @@ export class SmartApp extends ReactApp<
 
     // Check
     if (data == null || payload == null) {
-      this.toLoginPage();
-      return false;
+      return this.loginFailed();
     }
 
     // Call API
@@ -343,11 +345,10 @@ export class SmartApp extends ReactApp<
 
     if (loginResult == null) return false;
 
-    if (loginResult.success) {
+    if (loginResult.ok) {
       // Auto success
       if (!this.doSuccess(loginResult, payload)) {
-        this.toLoginPage();
-        return false;
+        return this.loginFailed();
       }
       return true;
     }
@@ -368,7 +369,7 @@ export class SmartApp extends ReactApp<
             payload
           );
 
-          if (result != null && result.success) {
+          if (result?.ok) {
             // Manual success
             this.doSuccess(result, payload);
           }
@@ -379,8 +380,6 @@ export class SmartApp extends ReactApp<
       return false;
     }
 
-    this.toLoginPage();
-
-    return false;
+    return this.loginFailed();
   }
 }

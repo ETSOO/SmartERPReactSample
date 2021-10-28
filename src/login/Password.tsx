@@ -59,17 +59,17 @@ function Password(props: RouteComponentProps<{ username: string }>) {
       case 'UserFrozen':
       case 'DeviceFrozen':
         const frozenTime = new Date(result.data?.frozenTime);
-        title = title.replace('{0}', frozenTime.toLocaleString(app.culture));
+        title = title.format(frozenTime.toLocaleString(app.culture));
         disabled = true;
         break;
       case 'AccountExpired':
         const expiry = new Date(result.data?.expiry);
-        title = title.replace('{0}', expiry.toLocaleString(app.culture));
+        title = title.format(expiry.toLocaleString(app.culture));
         disabled = true;
         break;
       case 'OrgExpired':
         const orgExpiry = new Date(result.data?.orgExpiry);
-        title = title.replace('{0}', orgExpiry.toLocaleString(app.culture));
+        title = title.format(orgExpiry.toLocaleString(app.culture));
         disabled = true;
         break;
       case 'DeviceDisabled':
@@ -103,7 +103,7 @@ function Password(props: RouteComponentProps<{ username: string }>) {
     const result = await app.api.post<LoginResult>('Auth/Login', data, payload);
 
     if (result != null) {
-      if (result.success) {
+      if (result.ok) {
         // Token
         const refreshToken = app.getResponseToken(payload.response);
 

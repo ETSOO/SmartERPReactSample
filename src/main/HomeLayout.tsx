@@ -18,7 +18,7 @@ import { Link, Router } from '@reach/router';
 import { SmartApp } from '../app/SmartApp';
 import { UserMenu } from '../app/UserMenu';
 import Dashboard from './Dashboard';
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import HistoryIcon from '@mui/icons-material/History';
 import HomeIcon from '@mui/icons-material/Home';
@@ -75,11 +75,11 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 const DrawerHeader = styled('div')(({ theme }) => ({
+  // necessary for content to be below app bar
+  ...(theme.mixins.toolbar as CSSProperties),
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(0, 1, 0, 2.5),
-  // necessary for content to be below app bar
-  ...theme.mixins.toolbar,
   justifyContent: 'space-between'
 }));
 
