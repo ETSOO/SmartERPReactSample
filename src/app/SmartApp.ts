@@ -359,6 +359,11 @@ export class SmartApp extends ReactApp<
       this.notifier.prompt(
         labels.reloginTip,
         async (pwd) => {
+          if (pwd == null) {
+            this.toLoginPage();
+            return;
+          }
+
           // Set password for the action
           data.pwd = pwd;
 
@@ -369,10 +374,17 @@ export class SmartApp extends ReactApp<
             payload
           );
 
-          if (result?.ok) {
+          if (result == null) return;
+
+          if (result.ok) {
             // Manual success
             this.doSuccess(result, payload);
+            return;
           }
+
+          // Popup message
+          this.alertResult(result);
+          return false;
         },
         labels.login,
         { type: 'password' }

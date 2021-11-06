@@ -136,7 +136,7 @@ function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
         inputProps={{ inputMode: 'numeric' }}
         ref={mRef}
         inputRef={inputRef}
-        showClear={true}
+        showClear
         onEnter={(e) => {
           submit();
           e.preventDefault();

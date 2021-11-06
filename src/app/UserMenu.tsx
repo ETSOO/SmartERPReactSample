@@ -86,7 +86,7 @@ export function UserMenu() {
             }
           }
         }}
-        disableScrollLock={true}
+        disableScrollLock
         anchorEl={anchorEl}
         anchorOrigin={{
           vertical: 'bottom',

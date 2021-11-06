@@ -14,7 +14,7 @@ import {
   useTheme
 } from '@mui/material';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import { Link, Router } from '@reach/router';
+import { Link, Router, useLocation } from '@reach/router';
 import { SmartApp } from '../app/SmartApp';
 import { UserMenu } from '../app/UserMenu';
 import Dashboard from './Dashboard';
@@ -95,6 +95,20 @@ export function HomeLayout() {
     'menuLoginHistory'
   );
 
+  const location = useLocation();
+
+  // Menu properties
+  const getMenuItem = (to: string) => {
+    const path = location.pathname;
+    const selected = to === path;
+
+    return {
+      component: Link,
+      selected,
+      to
+    };
+  };
+
   // Page context
   const PageContext = SmartApp.pageState.context;
 
@@ -161,19 +175,16 @@ export function HomeLayout() {
             <Typography variant="h6" noWrap component="div">
               {labels.smartERP}
             </Typography>
-            <IconButton title={labels.hideMenu} onClick={handleDrawerClose}>
-              <ChevronLeftIcon />
-            </IconButton>
           </DrawerHeader>
           <Divider />
           <List onClick={mdUp ? undefined : handleDrawerClose}>
-            <ListItem button component={Link} to="/home/">
+            <ListItem button {...getMenuItem('/home/')}>
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
               <ListItemText primary={labels.menuHome} />
             </ListItem>
-            <ListItem button component={Link} to="/home/user/loginhistory">
+            <ListItem button {...getMenuItem('/home/user/loginhistory')}>
               <ListItemIcon>
                 <HistoryIcon />
               </ListItemIcon>

@@ -91,7 +91,7 @@ function RegisterPassword(props: RouteComponentProps<{ username: string }>) {
   return (
     <SharedLayout
       title={labels.createPassword}
-      subTitle={<Typography variant="subtitle2">{id}</Typography>}
+      subTitle={id}
       buttons={[
         <Button
           variant="outlined"
@@ -109,7 +109,7 @@ function RegisterPassword(props: RouteComponentProps<{ username: string }>) {
     >
       <TextFieldEx
         label={labels.yourPassword}
-        showPassword={true}
+        showPassword
         autoComplete="new-password"
         autoFocus
         inputRef={passwordRef}
@@ -121,7 +121,7 @@ function RegisterPassword(props: RouteComponentProps<{ username: string }>) {
       />
       <TextFieldEx
         label={labels.repeatPassword}
-        showPassword={true}
+        showPassword
         inputRef={repeatRef}
         ref={repeatMethodRef}
         onEnter={(e) => {
@@ -129,7 +129,7 @@ function RegisterPassword(props: RouteComponentProps<{ username: string }>) {
           e.preventDefault();
         }}
       />
-      <Typography variant="body2">* {labels.passwordTip}</Typography>
+      <Typography variant="caption">* {labels.passwordTip}</Typography>
     </SharedLayout>
   );
 }

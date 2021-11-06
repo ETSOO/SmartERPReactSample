@@ -93,7 +93,7 @@ function Register(props: RouteComponentProps<{ '*': string }>) {
         autoCorrect="off"
         autoCapitalize="none"
         inputProps={{ inputMode: 'email' }}
-        showClear={true}
+        showClear
         defaultValue={username}
         onEnter={(e) => {
           nextClick();

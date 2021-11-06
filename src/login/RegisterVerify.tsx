@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography } from '@mui/material';
+import { Button } from '@mui/material';
 import { Redirect, RouteComponentProps } from '@reach/router';
 import { SmartApp } from '../app/SmartApp';
 import { SharedLayout } from './SharedLayout';
@@ -117,7 +117,7 @@ function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
   return (
     <SharedLayout
       title={labels.verification}
-      subTitle={<Typography variant="subtitle2">{enterCodeTip}</Typography>}
+      subTitle={enterCodeTip}
       buttons={[
         <CountdownButton
           variant="outlined"
@@ -142,7 +142,7 @@ function RegisterVerify(props: RouteComponentProps<{ username: string }>) {
         inputProps={{ inputMode: 'numeric' }}
         ref={mRef}
         inputRef={inputRef}
-        showClear={true}
+        showClear
         onEnter={(e) => {
           submit();
           e.preventDefault();

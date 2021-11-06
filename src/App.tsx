@@ -224,7 +224,7 @@ function App(props: RouteComponentProps) {
               autoCorrect="off"
               autoCapitalize="none"
               inputProps={{ inputMode: 'email' }}
-              showClear={true}
+              showClear
               autoComplete="username"
               onEnter={(e) => {
                 nextClick();

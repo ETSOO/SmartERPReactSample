@@ -89,7 +89,7 @@ function RegisterComplete(props: RouteComponentProps<{ username?: string }>) {
         autoFocus
         autoCorrect="off"
         autoCapitalize="none"
-        showClear={true}
+        showClear
         onEnter={(e) => {
           submitClick();
           e.preventDefault();

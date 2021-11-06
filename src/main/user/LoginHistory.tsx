@@ -50,7 +50,7 @@ function LoginHistory(props: RouteComponentProps) {
   );
 
   // Refs
-  const ref = React.createRef<ScrollerListForwardRef>();
+  const ref = React.useRef<ScrollerListForwardRef>();
 
   // Load data
   const reloadData = async () => {

@@ -129,7 +129,7 @@ function ChangePassword(_props: RouteComponentProps) {
           <TextFieldEx
             name="oldPassword"
             label={labels.currentPassword}
-            showPassword={true}
+            showPassword
             autoFocus
             value={formik.values.oldPassword}
             onChange={formik.handleChange}
@@ -141,7 +141,7 @@ function ChangePassword(_props: RouteComponentProps) {
           <TextFieldEx
             name="password"
             label={labels.newPassword}
-            showPassword={true}
+            showPassword
             autoComplete="new-password"
             value={formik.values.password}
             onChange={formik.handleChange}
@@ -151,7 +151,7 @@ function ChangePassword(_props: RouteComponentProps) {
           <TextFieldEx
             name="rePassword"
             label={labels.repeatPassword}
-            showPassword={true}
+            showPassword
             value={formik.values.rePassword}
             onChange={formik.handleChange}
             error={

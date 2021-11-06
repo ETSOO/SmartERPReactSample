@@ -91,7 +91,7 @@ ReactDOM.render(
               >
                 <CssBaseline />
                 <React.Suspense fallback={<LinearProgress />}>
-                  <Router basepath={app.settings.homepage} primary={true}>
+                  <Router basepath={app.settings.homepage} primary>
                     <App path="/" />
 
                     <About path="/login/about" />

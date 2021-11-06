@@ -118,7 +118,7 @@ function CallbackComplete(props: RouteComponentProps<{ username: string }>) {
     >
       <TextFieldEx
         label={labels.yourPassword}
-        showPassword={true}
+        showPassword
         autoComplete="new-password"
         autoFocus
         inputRef={passwordRef}
@@ -130,7 +130,7 @@ function CallbackComplete(props: RouteComponentProps<{ username: string }>) {
       />
       <TextFieldEx
         label={labels.repeatPassword}
-        showPassword={true}
+        showPassword
         inputRef={repeatRef}
         ref={repeatMethodRef}
         onEnter={(e) => {

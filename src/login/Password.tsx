@@ -154,7 +154,7 @@ function Password(props: RouteComponentProps<{ username: string }>) {
         <TextFieldEx
           name="password"
           label={labels.yourPassword}
-          showPassword={true}
+          showPassword
           autoComplete="current-password"
           inputRef={passwordRef}
           ref={mRef}
